@@ -205,6 +205,7 @@ public class Port {
         this.containers = new HashMap<>();
         this.vehicles = new HashMap<>();
         this.trafficHistory = new ArrayList<>();
+        this.containerInfor_ID = containerInfor_ID;
     }
 
     public String addContainer(String containerId, double weight) {
