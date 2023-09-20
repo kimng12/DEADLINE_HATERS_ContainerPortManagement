@@ -8,7 +8,7 @@ import java.util.List;
 public class PortCRUD {
     public  static  int getPortCount() {
         int count = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/Data/Port.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("PortMySelft/src/Data/Port.txt"))) {
             while (reader.readLine() != null) {
                 count++;
             }
@@ -24,7 +24,7 @@ public class PortCRUD {
         String portId = "p-" + nextId;
         String fullDetails = portId + ", " + portDetails;
 
-        try (FileWriter writer = new FileWriter("src/Data/Port.txt", true)) {
+        try (FileWriter writer = new FileWriter("PortMySelft/src/Data/Port.txt", true)) {
             writer.write(fullDetails + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file.");
@@ -34,7 +34,7 @@ public class PortCRUD {
 
     public static List<String> readPorts() {
         List<String> ports = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("port_data.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("PortMySelft/src/Data/Port.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 ports.add(line);

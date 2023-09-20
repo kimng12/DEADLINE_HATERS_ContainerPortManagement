@@ -15,9 +15,9 @@ public class Main {
         System.out.println("Welcome to the Port Management System");
 
         // Sample data (Ideally, this would be loaded from a file or database)
-        Port port1 = new Port("p-001", "Port A", 1200.00, 1000, 1000, true, "c-001");
-        Port port2 = new Port("p-002", "Port B", 1500.00, 1200, 1300, true, "c-002");
-        PortManager manager1 = new PortManager("manager1", "password", port1);
+//        Port port1 = new Port("p-001", "Port A", 1200.00, 1000, 1000, true, "c-001");
+//        Port port2 = new Port("p-002", "Port B", 1500.00, 1200, 1300, true, "c-002");
+//        PortManager manager1 = new PortManager("manager1", "password", port1);
         Admin admin = new Admin("admin", "adminPassword");
 
         while (true) {
