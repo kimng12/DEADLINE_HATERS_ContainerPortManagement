@@ -171,10 +171,10 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter details for the new Port: ");
+                    System.out.println("Enter details for the new Port (excluding ID):");
                     String portDetails = scanner.nextLine();
                     PortCRUD.createPort(portDetails);
-                    System.out.println("Port created and saved.");
+                    System.out.println("Port created and saved with a new ID.");
                     break;
                 case 2:
                     List<String> ports = PortCRUD.readPorts();
