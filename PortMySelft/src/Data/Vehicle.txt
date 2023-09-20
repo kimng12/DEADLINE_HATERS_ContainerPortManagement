@@ -1,0 +1,2 @@
+v-001, Vinfast, Basic Truck, 2012.34, 324, p-001, 234
+v-002, Thaco, Tanker Truck, 23512.34, 3243, p-002, 2343
