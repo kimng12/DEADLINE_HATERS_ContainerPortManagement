@@ -6,6 +6,9 @@ import User.Admin;
 import Port.*;
 import  Vehicle.*;
 import Container.*;
+
+import javax.sound.midi.Soundbank;
+
 public class Main {
     public static ArrayList<Port> ports = new ArrayList<>();
     public static ArrayList<Container> containers = new ArrayList<>();
@@ -15,9 +18,7 @@ public class Main {
         System.out.println("Welcome to the Port Management System");
 
         // Sample data (Ideally, this would be loaded from a file or database)
-//        Port port1 = new Port("p-001", "Port A", 1200.00, 1000, 1000, true, "c-001");
-//        Port port2 = new Port("p-002", "Port B", 1500.00, 1200, 1300, true, "c-002");
-//        PortManager manager1 = new PortManager("manager1", "password", port1);
+        PortManager manager1 = new PortManager("manager1", "password");
         Admin admin = new Admin("admin", "adminPassword");
 
         while (true) {
@@ -68,39 +69,44 @@ public class Main {
             }
         }
     }
+
     // Admin Menu
     private static void displayAdminMenu(Scanner scanner) {
-                int choice;
-                do {
-                    System.out.println("Welcome to Admin Menu");
-                    System.out.println("1. CRUD operations for Vehicles");
-                    System.out.println("2. CRUD operations for Port");
-                    System.out.println("3. CRUD operations for Container");
-                    // ... other admin-specific operations
-                    System.out.println("0. Logout");
-                    System.out.print("Enter your choice: ");
-                    choice = scanner.nextInt();
+        int choice;
+        do {
+            System.out.println("Welcome to Admin Menu");
+            System.out.println("1. CRUD operations for Vehicles");
+            System.out.println("2. CRUD operations for Port");
+            System.out.println("3. CRUD operations for Container");
+            System.out.println("4. Moving Container Among the Ports");
+            // ... other admin-specific operations
+            System.out.println("0. Logout");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
 
-                    switch (choice) {
-                        case 1:
-                            vehicleCRUDMenu(scanner);
-                            break;
-                        case 2:
-                            portCRUDMenu(scanner);
-                            break;
-                        case 3:
-                            containerCRUDMenu(scanner);
-                            break;
-                        case 0:
-                            System.out.println("Logging out...");
-                            break;
-                        default:
-                            System.out.println("Invalid choice! Please try again.");
-                }
-            } while (choice !=0);
-        }
-        // Vehicles CRUD Menu
-        private static void vehicleCRUDMenu(Scanner scanner) {
+            switch (choice) {
+                case 1:
+                    vehicleCRUDMenu(scanner);
+                    break;
+                case 2:
+                    portCRUDMenu(scanner);
+                    break;
+                case 3:
+                    containerCRUDMenu(scanner);
+                    break;
+                case 4:
+                    displayMovePortForm();
+                case 0:
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        } while (choice != 0);
+    }
+
+    // Vehicles CRUD Menu
+    private static void vehicleCRUDMenu(Scanner scanner) {
         int choice;
         do {
             System.out.println("Vehicle CRUD Operations");
@@ -114,38 +120,53 @@ public class Main {
             scanner.nextLine(); // Consume newline
             switch (choice) {
                 case 1:
-                    /*
-                    In this case user need to enter the details respectively as the format listed
-                    */
-                    System.out.print("Enter vehicle details (format: ID,Name,Type,FuelCapacity,CurrentFuel,CurrentPort,CarryingCapacity): ");
-                    String vehicleDetails = scanner.nextLine();
-                    VehicleCRUD.createVehicle(vehicleDetails);
+                    // Case 1: Add a new vehicle
+                    System.out.println("Enter vehicle details:");
+                    System.out.print("Type: ");
+                    String type = scanner.nextLine();
+                    System.out.print("Storing Capacity: ");
+                    int storingCapacity = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    // Generate a unique vehicle ID (you can modify this logic if needed)
+                    int nextId = VehicleCRUD.getVehicleCount() + 1;
+                    String vehicleId = "v-" + nextId;
+                    // Create a new Vehicle object and add it to the file
+                    Vehicle newVehicle = new Vehicle(vehicleId, type, storingCapacity);
+                    VehicleCRUD.createVehicle(newVehicle);
+                    System.out.println("Vehicle created and saved with ID: " + vehicleId);
                     break;
-                case 2: // Show all the vehicles
-                    List<String> vehicles = VehicleCRUD.readVehicles();
-                    vehicles.forEach(System.out::println);
+                case 2:
+                    // Case 2: Display all vehicles
+                    List<Vehicle> allVehicles = VehicleCRUD.readVehicles();
+                    if (allVehicles.isEmpty()) {
+                        System.out.println("No vehicles to display!!");
+                    } else {
+                        for (Vehicle vehicle : allVehicles) {
+                            System.out.println(vehicle.toString());
+                        }
+                    }
                     break;
                 case 3:
-                    /*
-                    In this case, user need to enter all the details of that vehicle
-                    ID,Name,Type,FuelCapacity,CurrentFuel,CurrentPort,CarryingCapacity. Then they can enter the improvement
-                    for this vehicles
-                    */
-                    System.out.print("Enter existing vehicle details to update: ");
-                    String oldVehicleDetails = scanner.nextLine();
-                    System.out.print("Enter new vehicle details: ");
-                    String newVehicleDetails = scanner.nextLine();
-                    VehicleCRUD.updateVehicle(oldVehicleDetails, newVehicleDetails);
+                    // Case 3: Update a vehicle
+                    System.out.print("Enter existing vehicle ID to update: ");
+                    String oldVehicleId = scanner.nextLine();
+                    System.out.print("Enter new vehicle details:");
+                    System.out.print("Type: ");
+                    String newType = scanner.nextLine();
+                    System.out.print("Storing Capacity: ");
+                    int newStoringCapacity = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    // Create a new Vehicle object with updated details
+                    Vehicle updatedVehicle = new Vehicle(oldVehicleId, newType, newStoringCapacity);
+                    VehicleCRUD.updateVehicle(oldVehicleId, updatedVehicle);
+                    System.out.println("Vehicle updated successfully.");
                     break;
                 case 4:
-                    /*
-                    In this case, user need to enter all the details of that vehicle
-                    ID,Name,Type,FuelCapacity,CurrentFuel,CurrentPort,CarryingCapacity. Then they can delete
-                    for this vehicles
-                    */
-                    System.out.print("Enter vehicle details to delete: ");
-                    String vehicleToDelete = scanner.nextLine();
-                    VehicleCRUD.deleteVehicle(vehicleToDelete);
+                    // Case 4: Delete a vehicle
+                    System.out.print("Enter vehicle ID to delete: ");
+                    String vehicleIdToDelete = scanner.nextLine();
+                    VehicleCRUD.deleteVehicle(vehicleIdToDelete);
+                    System.out.println("Vehicle with ID " + vehicleIdToDelete + " deleted.");
                     break;
                 case 0:
                     System.out.println("Returning to main menu...");
@@ -153,15 +174,17 @@ public class Main {
                 default:
                     System.out.println("Invalid choice! Please try again.");
             }
-        } while (choice !=0);
+        } while (choice != 0);
     }
+
+
     // portCRUDMenu
     private static void portCRUDMenu(Scanner scanner) {
         int choice;
         do {
             System.out.println("Port CRUD Operations");
             System.out.println("1. Add a new Port");
-            System.out.println("2. Display all vehicles");
+            System.out.println("2. Display all Ports");
             System.out.println("3. Update a Port");
             System.out.println("4. Delete a Port");
             System.out.println("0. Go back to the main menu");
@@ -178,7 +201,11 @@ public class Main {
                     break;
                 case 2:
                     List<String> ports = PortCRUD.readPorts();
-                    ports.forEach(System.out::println);
+                    if (ports.isEmpty()) {
+                        System.out.println("No ports to display!!");
+                    } else {
+                        ports.forEach(System.out::println);
+                    }
                     break;
                 case 3:
                     System.out.print("Enter existing port details to update: ");
@@ -201,6 +228,7 @@ public class Main {
         } while (choice != 0);
     }
 
+
     private static void containerCRUDMenu(Scanner scanner) {
         int choice;
         do {
@@ -216,68 +244,86 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter Container details with format: ID, Weight: ");
+                    System.out.print("Enter Container details with format: Type, Weight (tons), Storing Capacity (tons): ");
                     String input = scanner.nextLine();
 
                     try {
                         String[] parts = input.split(", ");
-                        String id = parts[0];
-                        double weight = Double.parseDouble(parts[1]);
-                        addContainer(id, weight);
+                        String type = parts[0];
+                        int weight = Integer.parseInt(parts[1]);
+                        int storingCapacity = Integer.parseInt(parts[2]);
+
+                        // Call the method to add a new container with the updated attributes
+                        ContainerCRUD.addContainer(type, weight, storingCapacity);
                     } catch (Exception e) {
                         System.out.println("Invalid input format.");
                     }
                     break;
                 case 2:
-                    if (containers.isEmpty()) {
-                        System.out.println("No containers to display!!");
-                    } else {
-                        for (Container container : containers) {
-                            System.out.println("ID: " + container.getId() + ", Weight: " +container.getWeight());
-                        }
-                    }
+                    // Call the method to display all containers
+                    ContainerCRUD.displayContainers();
                     break;
                 case 3:
-                    System.out.print("Enter existing port details to update: ");
-                    String oldPortDetails = scanner.nextLine();
-                    System.out.print("Enter new port details: ");
-                    String newPortDetails = scanner.nextLine();
-                    PortCRUD.updatePort(oldPortDetails, newPortDetails);
+                    System.out.print("Enter the container ID to update: ");
+                    String idToUpdate = scanner.nextLine();
+
+                    System.out.print("Enter new container details (Type, Weight, Storing Capacity): ");
+                    String newDetails = scanner.nextLine();
+
+                    try {
+                        String[] newParts = newDetails.split(", ");
+                        String type = newParts[0];
+                        int weight = Integer.parseInt(newParts[1]);
+                        int storingCapacity = Integer.parseInt(newParts[2]);
+
+                        // Call the method to update the container with the new details
+                        ContainerCRUD.updateContainer(idToUpdate, type, weight, storingCapacity);
+                    } catch (Exception e) {
+                        System.out.println("Invalid input format.");
+                    }
                     break;
                 case 4:
-                    System.out.print("Enter container details to delete: ");
-                    String num = scanner.toString();
-                    removeContainer(num);
+                    System.out.print("Enter the container ID to delete: ");
+                    String idToDelete = scanner.nextLine();
+
+                    // Call the method to delete the container
+                    ContainerCRUD.removeContainer(idToDelete);
                     break;
                 case 0:
-                    System.out.println("Returning to main menu...");
+                    System.out.println("Returning to the main menu...");
                     break;
                 default:
                     System.out.println("Invalid choice! Please try again.");
             }
         } while (choice != 0);
-    }
-    public static void addContainer(String id, double weight) {
-        Container newContainer = new Container(id, weight);
-        containers.add(newContainer);
-        System.out.println("Container added successfully.");
-    }
-    public static void removeContainer(String id) {
-        for (Container container : containers) {
-            if (container.getId().equals(id)) {
-                containers.remove(container);
-                System.out.println("Container removed successfully.");
-                return;
-            }
-        }
-        System.out.println("Container not found.");
+
+        scanner.close();
     }
 
+    public static void displayMovePortForm() {
+        Scanner scanner = new Scanner(System.in);
+        // Step 1: User input vehicle ID, container ID, port A, port B
+        System.out.print("Enter Vehicle ID: ");
+        String vehicleId = scanner.nextLine();
+        System.out.print("Enter Container ID: ");
+        String containerId = scanner.nextLine();
+        System.out.print("Enter Port A: ");
+        String portA = scanner.nextLine();
+        System.out.print("Enter Port B: ");
+        String portB = scanner.nextLine();
 
+        // Call the PortCRUD method to check if the container can be stored in Port B
+        ContainerCRUD.checkContainerStorage(vehicleId, containerId, portA, portB);
 
-
-
-    // Write the addPort method here
-
-    // Write the removePort method here
+        scanner.close();
+    }
 }
+
+
+
+
+
+
+// Write the addPort method here
+
+// Write the removePort method here

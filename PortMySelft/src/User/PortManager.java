@@ -5,7 +5,7 @@ public class PortManager extends User {
     private Port port;
 
     // Constructor
-    public PortManager(String username, String password, Port port) {
+    public PortManager(String username, String password) {
         super(username, password);
         this.port = port;
     }

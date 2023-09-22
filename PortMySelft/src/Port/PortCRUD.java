@@ -74,4 +74,48 @@ public class PortCRUD {
             e.printStackTrace();
         }
     }
+
+
+    // Method to read storingCapacity of port B from port.txt
+    public static double readPortCapacity(String portId) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("src/Data/Port.txt"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5 && parts[0].trim().equals(portId)) {
+                    return Double.parseDouble(parts[4].trim());
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0.0; // Default if not found
+    }
 }
+
+//    public static void checkContainerStorage(String vehicleID, String containerID, String portA, String portB) {
+//        double containerWeight = readContainerWeight(containerId);
+//
+//        // Step 3: Read the "storingCapacity" of port B
+//        double portBCapacity = readPortCapacity(portB);
+//
+//        // Step 4: Compare container weight with port B's capacity
+//        boolean result = containerWeight <= portBCapacity;
+//
+//        // Step 5: Return true or false
+//        System.out.println("Container Weight: " + containerWeight + " tons");
+//        System.out.println("Port B Capacity: " + portBCapacity + " tons");
+//        System.out.println("Can the container be stored in Port B? " + result);
+//    }
+//
+//    // Method to read container weight from container.txt
+//    public static double readContainerWeight(String containerId) {
+//        // Implementation remains the same
+//    }
+//
+//    // Method to read storingCapacity of port B from port.txt
+//    public static double readPortCapacity(String portId) {
+//        // Implementation remains the same
+//    }

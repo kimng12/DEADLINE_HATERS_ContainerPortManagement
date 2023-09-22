@@ -1,26 +1,35 @@
 package Vehicle;
+
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VehicleCRUD {
 
-    private static final String VEHICLE_FILE = "src/Data/Vehicle.txt";
+    private static final String VEHICLE_FILE = "src/Data/Vehicles.txt";
 
-    public static void createVehicle(String vehicleDetails) {
+    public static void createVehicle(Vehicle vehicle) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(VEHICLE_FILE, true))) {
-            writer.write(vehicleDetails);
+            writer.write(vehicle.getId() + ", " + vehicle.getType() + ", " + vehicle.getStoringCapacity());
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
 
-    public static List<String> readVehicles() {
-        List<String> vehicles = new ArrayList<>();
+    public static List<Vehicle> readVehicles() {
+        List<Vehicle> vehicles = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(VEHICLE_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                vehicles.add(line);
+                String[] parts = line.split(", ");
+                if (parts.length == 3) {
+                    String id = parts[0];
+                    String type = parts[1];
+                    int storingCapacity = Integer.parseInt(parts[2]);
+                    Vehicle vehicle = new Vehicle(id, type, storingCapacity);
+                    vehicles.add(vehicle);
+                }
             }
         } catch (IOException e) {
             System.out.println("Error reading from file: " + e.getMessage());
@@ -28,31 +37,43 @@ public class VehicleCRUD {
         return vehicles;
     }
 
-    public static void updateVehicle(String oldVehicleDetails, String newVehicleDetails) {
-        List<String> vehicles = readVehicles();
-        int index = vehicles.indexOf(oldVehicleDetails);
-        if (index != -1) {
-            vehicles.set(index, newVehicleDetails);
-            writeToFile(vehicles);
-        } else {
-            System.out.println("Vehicle not found!");
+    public static void updateVehicle(String vehicleId, Vehicle updatedVehicle) {
+        List<Vehicle> vehicles = readVehicles();
+        for (int i = 0; i < vehicles.size(); i++) {
+            if (vehicles.get(i).getId().equals(vehicleId)) {
+                vehicles.set(i, updatedVehicle);
+                break;
+            }
         }
-    }
-
-    public static void deleteVehicle(String vehicleDetails) {
-        List<String> vehicles = readVehicles();
-        vehicles.remove(vehicleDetails);
         writeToFile(vehicles);
     }
 
-    private static void writeToFile(List<String> vehicles) {
+    public static void deleteVehicle(String vehicleId) {
+        List<Vehicle> vehicles = readVehicles();
+        vehicles.removeIf(vehicle -> vehicle.getId().equals(vehicleId));
+        writeToFile(vehicles);
+    }
+
+    private static void writeToFile(List<Vehicle> vehicles) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(VEHICLE_FILE))) {
-            for (String vehicle : vehicles) {
-                writer.write(vehicle);
+            for (Vehicle vehicle : vehicles) {
+                writer.write(vehicle.getId() + ", " + vehicle.getType() + ", " + vehicle.getStoringCapacity());
                 writer.newLine();
             }
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
+    }
+
+    public static int getVehicleCount() {
+        int count = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(VEHICLE_FILE))) {
+            while (reader.readLine() != null) {
+                count++;
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading from file: " + e.getMessage());
+        }
+        return count;
     }
 }
