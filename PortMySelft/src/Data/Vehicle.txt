@@ -1,5 +1,5 @@
-v-001,basic _truck,dry_storage,1000,3243,c-001,c-002,p-001
-v-002,basic _truck,dry_storage,1000,3243,c-003,c-004,p-001
+v-001,basic _truck,dry_storage,1000,3243,c-001,c-002
+v-002,basic _truck,dry_storage,1000,3243,c-003,c-004
 v-003,basic_truck,open_top,2000,3243,p-001
 v-004,basic_truck,open_side,3000,243,p-002
 v-005,reefer_trucks,refrigerated_container,4000,3243,p-001
