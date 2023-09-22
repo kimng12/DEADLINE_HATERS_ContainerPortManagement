@@ -38,7 +38,6 @@ public class FuelManagement {
         }
     }
 
-    // Save fuel data to the file
     private void saveFuelDataToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("Vehicle.txt"))) {
             for (Map.Entry<String, FuelData> entry : fuelDataMap.entrySet()) {
@@ -54,7 +53,6 @@ public class FuelManagement {
         }
     }
 
-    // Create: Refuel the vehicle by a specified amount of gallons
     public void refuel(String id, double gallons) {
         if (gallons > 0) {
             FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
@@ -70,13 +68,11 @@ public class FuelManagement {
         }
     }
 
-    // Read: Get the current fuel level
     public double getCurrentFuelLevel(String id) {
         FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
         return fuelData.getCurrentFuel();
     }
 
-    // Update: Deduct fuel consumption for a trip and update the current fuel level
     public void updateFuelForTrip(String id, double fuelConsumed) {
         if (fuelConsumed >= 0) {
             FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
@@ -90,7 +86,6 @@ public class FuelManagement {
         }
     }
 
-    // Delete: Set the current fuel level to zero (simulate emptying the fuel tank)
     public void emptyFuelTank(String id) {
         FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
         fuelData.setCurrentFuel(0.0);
@@ -101,7 +96,6 @@ public class FuelManagement {
     public static void main(String[] args) {
         FuelManagement fuelManager = new FuelManagement();
 
-        // Example usage
         fuelManager.refuel("v-001", 50.0);
         double currentFuelLevel = fuelManager.getCurrentFuelLevel("v-001");
         System.out.println("Current Fuel Level: " + currentFuelLevel);
