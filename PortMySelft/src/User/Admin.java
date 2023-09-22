@@ -21,21 +21,21 @@ public class Admin extends User {
     }
 
     // Method to add a new vehicle
-    public void addVehicle(Vehicle vehicle) {
-        System.out.println("Admin adding a new vehicle: " + vehicle.getName());
+//    public void addVehicle(Vehicle vehicle) {
+//        System.out.println("Admin adding a new vehicle: " + vehicle.getName());
         // Code to add the vehicle to the system (e.g., database)
     }
 
     // Method to remove an existing vehicle
-    public void removeVehicle(Vehicle vehicle) {
-        System.out.println("Admin removing an existing vehicle: " + vehicle.getName());
+//    public void removeVehicle(Vehicle vehicle) {
+//        System.out.println("Admin removing an existing vehicle: " + vehicle.getName());
         // Code to remove the vehicle from the system (e.g., database)
-    }
+    //}
 
-    // Method to generate statistics
-    public void generateStatistics() {
-        System.out.println("Admin generating system statistics.");
-        // Code to generate statistics (e.g., fuel usage, total containers, etc.)
-    }
-}
+//    // Method to generate statistics
+//    public void generateStatistics() {
+//        System.out.println("Admin generating system statistics.");
+//        // Code to generate statistics (e.g., fuel usage, total containers, etc.)
+//    }
+//}
 
