@@ -1,17 +1,17 @@
 package Weight;
-
+import  Vehicle.*;
+import Container.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 public class Weights {
 
     public static void main(String[] args) throws IOException {
-        Map<String, Integer> containerData = readContainerData("Container.txt");
-        Map<String, Integer> portData = readPortData("Port.txt");
-        Map<String, String[]> vehicleData = readVehicleData("Vehicle.txt");
+        Map<String, Integer> containerData = readContainerData("PortMySelft/src/Data/Container.txt");
+        Map<String, Integer> portData = readPortData("PortMySelft/src/Data/Port.txt");
+        Map<String, String[]> vehicleData = readVehicleData("PortMySelft/src/Data/Vehicle.txt");
 
         checkWeightLimit("v-001", "p-001", containerData, portData, vehicleData);
     }
