@@ -10,7 +10,7 @@ public class ContainerCRUD {
     private static List<Container> containers = new ArrayList<>();
     private static String filePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Container.txt";
 
-    public static void addContainer(String type,int weight, int storingCapacity) {
+    public static void addContainer(String type, int weight, int storingCapacity) {
         String id = generateContainerId();
 //        String type = "Standard"; // You can customize the type as needed
 
@@ -68,6 +68,86 @@ public class ContainerCRUD {
         String formattedNumber = String.format("%03d", nextNumber);
         return "c-" + formattedNumber;
     }
+    public static void transferContainerToPort(String chosenVehicleId, String chosenPortId) {
+        String vehicleFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
+        String portFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt";
+
+        List<String> allVehicles = new ArrayList<>();
+        String chosenContainerId = null;
+
+        // Read the entire Vehicle.txt file
+        try (BufferedReader reader = new BufferedReader(new FileReader(vehicleFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts[0].equals(chosenVehicleId)) {
+                    chosenContainerId = parts[7]; // Extract container ID
+                    // Remove the container ID from the vehicle's record
+                    line = String.join(",", parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
+                }
+                allVehicles.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Write all vehicles back to Vehicle.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(vehicleFilePath))) {
+            for (String line : allVehicles) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+// Add the container ID to the chosen port in Port.txt
+        List<String> updatedPortLines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(portFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(chosenPortId + ",")) {
+                    String[] parts = line.split(",");
+                    // Check if the port already has containers
+                    if ("no".equals(parts[6])) {
+                        parts[6] = chosenContainerId; // Replace "no" with the container ID
+                    } else {
+                        // Find the next available spot for the container ID
+                        int index = 7;
+                        while (index < parts.length && !"no".equals(parts[index])) {
+                            index++;
+                        }
+                        if (index < parts.length) {
+                            parts[index] = chosenContainerId; // Add the container ID in the next available spot
+                        } else {
+                            // If there's no available spot, append the container ID to the end
+                            line += "," + chosenContainerId;
+                            continue;
+                        }
+                        line = String.join(",", parts);
+                    }
+                }
+                updatedPortLines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+// Write the updated lines back to Port.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(portFilePath))) {
+            for (String line : updatedPortLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+}
+
 
     private static void rewriteContainerFile() {
         File file = new File(filePath);

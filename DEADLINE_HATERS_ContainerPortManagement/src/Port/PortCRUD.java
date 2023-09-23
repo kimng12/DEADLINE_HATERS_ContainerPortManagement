@@ -41,6 +41,20 @@ public class PortCRUD {
         }
     }
 
+    public static List<String> getAvailablePorts() {
+        List<String> availablePorts = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // For simplicity, we're assuming all ports are available. Adjust this logic if needed.
+                availablePorts.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading from file: " + e.getMessage());
+        }
+        return availablePorts;
+    }
+
     public static List<String> readPorts() {
         List<String> ports = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
