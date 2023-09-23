@@ -364,11 +364,16 @@ public class Main {
         System.out.print("Enter Port B ID: ");
         String portBID = scanner.nextLine();
 
-        // Method to move container
-        PortCRUD.moveContainerFromPortAToPortB(containerId, portAID, portBID);
+        boolean portBLandingAbility = PortCRUD.checkLandingAbility(portBID);
+        if (!portBLandingAbility) {
+            System.out.println("Port B does not have landing ability. Moving container is not allowed.");
+        } else {
+            // Method to move container
+            PortCRUD.moveContainerFromPortAToPortB(containerId, portAID, portBID);
 
-        // Saving Method
-        PortCRUD.saveMovingDetails(containerId, portAID, portBID, vehicleId);
-        System.out.println("Moving History was saved!");
+            // Saving Method
+            PortCRUD.saveMovingDetails(containerId, portAID, portBID, vehicleId);
+            System.out.println("Moving History was saved!");
+        }
     }
 }
