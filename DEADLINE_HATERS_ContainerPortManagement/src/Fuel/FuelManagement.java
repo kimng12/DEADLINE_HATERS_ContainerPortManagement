@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class FuelManagement {
     private Map<String, FuelData> fuelDataMap;
-    public static final String filePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
 
     public FuelManagement() {
         this.fuelDataMap = new HashMap<>();
@@ -14,17 +13,14 @@ public class FuelManagement {
     }
 
     private void loadFuelDataFromFile() {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            System.out.println("File not found: " + filePath);
-            return;
-        }
-        try (BufferedReader reader = new BufferedReader(new FileReader())) {
+        File file = new File("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt");
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 7) {
                     String id = parts[0].trim();
+                    System.out.println("Read ID from file: " + id);
                     String vehicleType = parts[1].trim();
                     String containerType = parts[2].trim();
                     double currentFuel = Double.parseDouble(parts[3].trim());
@@ -40,8 +36,8 @@ public class FuelManagement {
     }
 
     private void saveFuelDataToFile() {
-        File file = new File(filePath);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        File file = new File("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"))) {
             for (Map.Entry<String, FuelData> entry : fuelDataMap.entrySet()) {
                 String id = entry.getKey();
                 FuelData fuelData = entry.getValue();
