@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Weights {
 
-    public static void main(String[] args) throws IOException {
+    public static void runWeightCheck() throws IOException {
         Scanner scanner = new Scanner(System.in);
         Map<String, Integer> containerData = readContainerData("DEADLINE_HATERS_ContainerPortManagement/src/Data/Container.txt");
         Map<String, int[]> portData = readPortData("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt");

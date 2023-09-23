@@ -6,9 +6,13 @@ import User.Admin;
 import Port.*;
 import  Vehicle.*;
 import Container.*;
-
+import Weight.CRUD_Vehicle_port_toPort;
 import static java.awt.Color.*;
+import Weight.Weights;
 
+
+import java.io.IOException;
+import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -91,14 +95,17 @@ public class Main {
     private static void displayAdminMenu(Scanner scanner) {
         int choice;
         do {
-            System.out.println("||==================================================||");
-            System.out.println("||---------------Welcome to Admin Menu--------------||");
-            System.out.println("||         1. CRUD operations for Vehicles          ||");
-            System.out.println("||           2. CRUD operations for Port            ||");
-            System.out.println("||        3. CRUD operations for Container          ||");
-            System.out.println("||       4. Moving Container Among the Ports        ||");
-            System.out.println("||                   0. Logout                      ||");
-            System.out.println("||==================================================||");
+            System.out.println("||==============================================================||");
+            System.out.println("||---------------Welcome to Admin Menu--------------------------||");
+            System.out.println("||         1. CRUD operations for Vehicles                      ||");
+            System.out.println("||           2. CRUD operations for Port                        ||");
+            System.out.println("||        3. CRUD operations for Container                      ||");
+            System.out.println("||       4. Moving Container Among the Ports                    ||");
+            System.out.println("||       5.         Check Weights Limit Before transport           ||");
+            System.out.println("||       6. Move Weights of Container from vehicle to Port      ||");
+            System.out.println("||       7. Move Weights of Port from vehicle to Container      ||");
+            System.out.println("||                   0. Logout                                  ||");
+            System.out.println("||==============================================================||");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
@@ -117,6 +124,16 @@ public class Main {
                     break;
                 case 0:
                     System.out.println("Logging out...");
+                    break;
+                case 6:  // <-- New case
+                    transferWeight(scanner);
+                    break;
+                case 5:  // <-- New case for checking weight limits
+                    try {
+                        Weights.runWeightCheck();
+                    } catch (IOException e) {
+                        System.out.println("An error occurred: " + e.getMessage());
+                    }
                     break;
                 default:
                     System.out.println("Invalid choice! Please try again.");
@@ -247,7 +264,9 @@ public class Main {
                     System.out.print("Enter the port ID: ");
                     String portId = scanner.nextLine();
                     boolean hasLandingAbility = PortCRUD.checkLandingAbility(portId);
+
                     System.out.println("Landing Ability for " + portId + ": " + hasLandingAbility);
+                    break;
                 case 0:
                     System.out.println("Returning to main menu...");
                     break;
@@ -286,14 +305,14 @@ public class Main {
                         int storingCapacity = Integer.parseInt(parts[2]);
 
                         // Call the method to add a new container with the updated attributes
-                        ContainerCRUD.addContainer(type, weight, storingCapacity);
+                        //                    ContainerCRUD.addContainer(type, weight, storingCapacity);
                     } catch (Exception e) {
                         System.out.println("Invalid input format.");
                     }
                     break;
                 case 2:
                     // Call the method to display all containers
-                    ContainerCRUD.displayContainers();
+                    //ContainerCRUD.displayContainers();
                     break;
                 case 3:
                     System.out.print("Enter the container ID to update: ");
@@ -309,7 +328,7 @@ public class Main {
                         int storingCapacity = Integer.parseInt(newParts[2]);
 
                         // Call the method to update the container with the new details
-                        ContainerCRUD.updateContainer(idToUpdate, type, weight, storingCapacity);
+                        //ContainerCRUD.updateContainer(idToUpdate, type, weight, storingCapacity);
                     } catch (Exception e) {
                         System.out.println("Invalid input format.");
                     }
@@ -319,7 +338,7 @@ public class Main {
                     String idToDelete = scanner.nextLine();
 
                     // Call the method to delete the container
-                    ContainerCRUD.removeContainer(idToDelete);
+                    //ContainerCRUD.removeContainer(idToDelete);
                     break;
                 case 5:
                     // Display all vehicles with containers
@@ -355,7 +374,7 @@ public class Main {
 
                     // Call the transferContainerToPort function
                     String chosenPortId = availablePorts.get(portChoice - 1);
-                    ContainerCRUD.transferContainerToPort(chosenVehicleId, chosenPortId);
+                    //ContainerCRUD.transferContainerToPort(chosenVehicleId, chosenPortId);
                     System.out.println("Container dropped successfully!");
                     break;
                 case 0:
@@ -391,6 +410,21 @@ public class Main {
             // Saving Method
             PortCRUD.saveMovingDetails(containerId, portAID, portBID, vehicleId);
             System.out.println("Moving History was saved!");
+        }
+
+    }
+    // New method to handle weight transfer
+    private static void transferWeight(Scanner scanner) {
+        System.out.print("Enter Container ID: ");
+        String containerId = scanner.next();
+        System.out.print("Enter Port B ID: ");
+        String portBID = scanner.next();
+
+        try {
+            CRUD_Vehicle_port_toPort.updateData(containerId, portBID);  // Assuming updateData is a static method in CRUD_Vehicle_port_toPort class
+            System.out.println("Data updated successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 }
