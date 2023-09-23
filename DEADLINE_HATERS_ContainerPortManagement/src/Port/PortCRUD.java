@@ -5,6 +5,7 @@ import Container.ContainerCRUD;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class PortCRUD {
@@ -77,16 +78,42 @@ public class PortCRUD {
         }
     }
 
-    public static void deletePort(String portToDelete) {
+    public static void deletePort(String portIdToDelete, Scanner scanner) {
         List<String> ports = readPorts();
-        ports.remove(portToDelete);
-        try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
-            for (String port : ports) {
-                writer.write(port + "\n");
+        boolean portFound = false;
+
+        for (String port : ports) {
+            String[] parts = port.split(",");
+            if (parts.length >= 1 && parts[0].trim().equals(portIdToDelete)) {
+                portFound = true;
+                break;
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred while deleting from the file.");
-            e.printStackTrace();
+        }
+
+        if (!portFound) {
+            System.out.println("Port with ID " + portIdToDelete + " not found.");
+        } else {
+            System.out.print("Are you sure you want to delete the port with ID " + portIdToDelete + "? (Yes/No): ");
+            String confirmation = scanner.nextLine().trim().toLowerCase();
+
+            if (confirmation.equals("yes")) {
+                ports.removeIf(port -> {
+                    String[] parts = port.split(",");
+                    return parts.length >= 1 && parts[0].trim().equals(portIdToDelete);
+                });
+
+                try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
+                    for (String updatedPort : ports) {
+                        writer.write(updatedPort + "\n");
+                    }
+                    System.out.println("Port with ID " + portIdToDelete + " deleted successfully.");
+                } catch (IOException e) {
+                    System.out.println("An error occurred while deleting from the file.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Deletion canceled.");
+            }
         }
     }
 

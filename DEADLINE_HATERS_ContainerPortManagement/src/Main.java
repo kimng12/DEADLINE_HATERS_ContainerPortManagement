@@ -230,9 +230,9 @@ public class Main {
                     PortCRUD.updatePort(portID, newPortDetails);
                     break;
                 case 4:
-                    System.out.print("Enter port details to delete: ");
-                    String portToDelete = scanner.nextLine();
-                    PortCRUD.deletePort(portToDelete);
+                    System.out.print("Enter port ID to delete: ");
+                    String portIdToDelete = scanner.nextLine();
+                    PortCRUD.deletePort(portIdToDelete, scanner);
                     break;
                 case 5:
                     System.out.print("Enter the port ID: ");
