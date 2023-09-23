@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class FuelManagement {
     private Map<String, FuelData> fuelDataMap; // VehicleID -> FuelData
+    private static String filePath = "src/Data/Container.txt";
 
     public FuelManagement() {
         this.fuelDataMap = new HashMap<>();
@@ -14,7 +15,6 @@ public class FuelManagement {
 
     // Load fuel data from the file into the map
     private void loadFuelDataFromFile() {
-        String filePath = "src/Data/Vehicle.txt";
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
@@ -41,7 +41,6 @@ public class FuelManagement {
     }
 
     private void saveFuelDataToFile() {
-        String filePath = "src/Data/Vehicle.txt";
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
