@@ -1,10 +1,6 @@
 package Fuel;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +14,13 @@ public class FuelManagement {
 
     // Load fuel data from the file into the map
     private void loadFuelDataFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("Vehicle.txt"))) {
+        String filePath = "src/Data/Vehicle.txt";
+        File file = new File(filePath);
+        File parentDirectory = file.getParentFile();
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdirs(); // Create parent directories if they don't exist
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -39,7 +41,13 @@ public class FuelManagement {
     }
 
     private void saveFuelDataToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Vehicle.txt"))) {
+        String filePath = "src/Data/Vehicle.txt";
+        File file = new File(filePath);
+        File parentDirectory = file.getParentFile();
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdirs(); // Create parent directories if they don't exist
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Map.Entry<String, FuelData> entry : fuelDataMap.entrySet()) {
                 String id = entry.getKey();
                 FuelData fuelData = entry.getValue();
@@ -93,7 +101,7 @@ public class FuelManagement {
         saveFuelDataToFile();
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         FuelManagement fuelManager = new FuelManagement();
 
         fuelManager.refuel("v-001", 50.0);
@@ -101,7 +109,7 @@ public class FuelManagement {
         System.out.println("Current Fuel Level: " + currentFuelLevel);
         fuelManager.updateFuelForTrip("v-001", 10.0);
         fuelManager.emptyFuelTank("v-001");
-    }
+    }*/
 }
 
 class FuelData {

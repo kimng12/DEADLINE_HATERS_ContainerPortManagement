@@ -9,15 +9,22 @@ import java.util.List;
 public class ContainerCRUD {
     private static List<Container> containers = new ArrayList<>();
 
+
     public static void addContainer(String type,int weight, int storingCapacity) {
         String id = generateContainerId();
 //        String type = "Standard"; // You can customize the type as needed
 
         Container container = new Container(id, type, (int) weight, storingCapacity);
         containers.add(container);
+        String filePath = "src/Data/Container.txt";
+        File file = new File(filePath);
+        File parentDirectory = file.getParentFile();
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdirs(); // Create parent directories if they don't exist
+        }
 
         // Write the container details to the "Container.txt" file
-        try (FileWriter writer = new FileWriter("src/Data/Container.txt", true);
+        try (FileWriter writer = new FileWriter(file, true);
              BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
             bufferedWriter.write(container.toString());
             bufferedWriter.newLine();
@@ -59,12 +66,19 @@ public class ContainerCRUD {
     private static String generateContainerId() {
         // Generate a new container ID with format "c-numberFromOne"
         int nextNumber = containers.size() + 1;
-        return "c-" + nextNumber;
+        String formattedNumber = String.format("%03d", nextNumber);
+        return "c-" + formattedNumber;
     }
 
     private static void rewriteContainerFile() {
+        String filePath = "src/Data/Container.txt";
+        File file = new File(filePath);
+        File parentDirectory = file.getParentFile();
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdirs(); // Create parent directories if they don't exist
+        }
         // Rewrite the "Container.txt" file with the updated container list
-        try (FileWriter writer = new FileWriter("src/Data/Container.txt");
+        try (FileWriter writer = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
             for (Container container : containers) {
                 bufferedWriter.write(container.toString());
@@ -91,8 +105,14 @@ public class ContainerCRUD {
 
     // Method to read container weight from container.txt
     public static double readContainerWeight(String containerId) {
+        String filePath = "src/Data/Container.txt";
+        File file = new File(filePath);
+        File parentDirectory = file.getParentFile();
+        if (!parentDirectory.exists()) {
+            parentDirectory.mkdirs(); // Create parent directories if they don't exist
+        }
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("src/Data/Container.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
