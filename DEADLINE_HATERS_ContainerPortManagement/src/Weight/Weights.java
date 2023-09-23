@@ -41,13 +41,15 @@ public class Weights {
         return data;
     }
 
-    public static Map<String, Integer> readPortData(String fileName) throws IOException {
-        Map<String, Integer> data = new HashMap<>();
+    public static Map<String, int[]> readPortData(String fileName) throws IOException {
+        Map<String, int[]> data = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                data.put(parts[0], Integer.parseInt(parts[3].replace("kg", "")));
+                int currentKg = Integer.parseInt(parts[3]);
+                int maxKg = Integer.parseInt(parts[4]);
+                data.put(parts[0], new int[]{currentKg, maxKg});
             }
         }
         return data;
