@@ -88,39 +88,20 @@ public class ContainerCRUD {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
     }
-    public static void checkContainerStorage(String vehicleID, String containerID, String portA, String portB) {
-        double containerWeight = readContainerWeight(containerID);
-
-        // Step 3: Read the "storingCapacity" of port B
-        double portBCapacity = PortCRUD.readPortCapacity(portB);
-
-        // Step 4: Compare container weight with port B's capacity
-        boolean result = containerWeight <= portBCapacity;
-
-        // Step 5: Return true or false
-        System.out.println("Container Weight: " + containerWeight + " tons");
-        System.out.println("Port B Capacity: " + portBCapacity + " tons");
-        System.out.println("Can the container be stored in Port B? " + result);
-    }
 
     // Method to read container weight from container.txt
     public static double readContainerWeight(String containerId) {
-        String filePath = "src/Data/Container.txt";
-        File file = new File(filePath);
-        File parentDirectory = file.getParentFile();
-        if (!parentDirectory.exists()) {
-            parentDirectory.mkdirs(); // Create parent directories if they don't exist
-        }
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Container.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 2 && parts[0].trim().equals(containerId)) {
-                    return Double.parseDouble(parts[1].trim());
+                if (parts.length >= 1 && parts[0].trim().equals(containerId)) {
+                    // Assuming that weight is in the 2nd column (index 1)
+                    if (parts.length >= 2) {
+                        return Double.parseDouble(parts[1].trim());
+                    }
                 }
             }
-            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

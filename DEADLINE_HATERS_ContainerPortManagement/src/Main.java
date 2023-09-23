@@ -124,12 +124,12 @@ public class Main {
                     System.out.println("Enter vehicle details:");
                     System.out.print("Type: ");
                     String type = scanner.nextLine();
-                    System.out.print("Storing Capacity: ");
+                    System.out.print("Storing Capacity (tons): ");
                     int storingCapacity = scanner.nextInt();
                     scanner.nextLine(); // Consume newline
                     // Generate a unique vehicle ID (you can modify this logic if needed)
                     int nextId = VehicleCRUD.getVehicleCount() + 1;
-                    String vehicleId = "v-" + nextId;
+                    String vehicleId = String.format("v-%03d", nextId);
                     // Create a new Vehicle object and add it to the file
                     Vehicle newVehicle = new Vehicle(vehicleId, type, storingCapacity);
                     VehicleCRUD.createVehicle(newVehicle);
@@ -187,6 +187,7 @@ public class Main {
             System.out.println("2. Display all Ports");
             System.out.println("3. Update a Port");
             System.out.println("4. Delete a Port");
+            System.out.println("5. Check Port Availability");
             System.out.println("0. Go back to the main menu");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
@@ -219,6 +220,12 @@ public class Main {
                     String portToDelete = scanner.nextLine();
                     PortCRUD.deletePort(portToDelete);
                     break;
+                case 5:
+                    System.out.print("Enter the port ID: ");
+                    String portID = scanner.nextLine();
+                    System.out.print("Enter the container ID: ");
+                    String containerID = scanner.nextLine();
+                    PortCRUD.checkPortAbility(portID, containerID);
                 case 0:
                     System.out.println("Returning to main menu...");
                     break;
@@ -313,9 +320,6 @@ public class Main {
         String portB = scanner.nextLine();
 
         // Call the PortCRUD method to check if the container can be stored in Port B
-        ContainerCRUD.checkContainerStorage(vehicleId, containerId, portA, portB);
-
-        scanner.close();
     }
 }
 

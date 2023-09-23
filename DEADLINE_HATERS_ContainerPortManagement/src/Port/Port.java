@@ -1,4 +1,6 @@
 package Port;
+import Container.Container;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 public class Port {
@@ -24,6 +26,7 @@ public class Port {
         this.containers = new HashMap<>();
         this.vehicles = new HashMap<>();
         this.trafficHistory = new ArrayList<>();
+        this.containerInfor_ID = containerInfor_ID;
     }
 
     public String addContainer(String containerId, double weight) {

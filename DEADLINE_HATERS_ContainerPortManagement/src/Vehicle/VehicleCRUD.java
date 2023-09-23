@@ -6,11 +6,14 @@ import java.util.List;
 
 public class VehicleCRUD {
 
-    private static final String VEHICLE_FILE = "src/Data/Vehicles.txt";
+    private static final String VEHICLE_FILE = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
 
     public static void createVehicle(Vehicle vehicle) {
+        int nextId = getVehicleCount() + 1;
+        String vehicleId = String.format("v-%03d", nextId); // Format the ID with leading zeros
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(VEHICLE_FILE, true))) {
-            writer.write(vehicle.getId() + ", " + vehicle.getType() + ", " + vehicle.getStoringCapacity());
+            writer.write(vehicleId + ", " + vehicle.getType() + ", " + vehicle.getStoringCapacity());
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());

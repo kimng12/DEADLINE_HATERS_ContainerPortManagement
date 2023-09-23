@@ -1,5 +1,5 @@
-p-001,1000,2000,current_1000kg,max_10000kg,yes,c-006,c-011
-p-002,2000,3000,current_2000kg,max_11000kg,yes,c-002,c-007,c-012
-p-003,3000,4000,current_3000kg,max_12000kg,yes,c-003,c-008,c-013
-p-004,4000,5000,current_4000kg,max_13000kg,no,c-004,c-009,c-014
-p-005,5000,6000,current_5000kg,max_14000kg,no,c-005,c-010,c-015
+p-001, 1000,2000,current_1000kg,max_10000kg,yes,c-006,c-011
+p-002, 2000,3000,current_2000kg,max_11000kg,yes,c-002,c-007,c-012
+p-003, 3000,4000,current_3000kg,max_12000kg,yes,c-003,c-008,c-013
+p-004, 4000,5000,current_4000kg,max_13000kg,no,c-004,c-009,c-014
+p-005, 5000,6000,current_5000kg,max_14000kg,no,c-005,c-010,c-015
