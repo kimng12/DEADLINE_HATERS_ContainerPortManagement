@@ -6,6 +6,9 @@ import User.Admin;
 import Port.*;
 import  Vehicle.*;
 import Container.*;
+
+import static java.awt.Color.*;
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -15,24 +18,31 @@ public class Main {
         // Sample data (Ideally, this would be loaded from a file or database)
         PortManager manager1 = new PortManager("manager1", "password");
         Admin admin = new Admin("admin", "adminPassword");
-        System.out.println("-----------------------------------------------------------");
-        System.out.println("            WELCOME TO COSC2081 GROUP ASSIGNMENT");
-        System.out.println("       CONTAINER PORT MANAGEMENT SYSTEM\n");
-        System.out.println("Instructors:");
-        System.out.println("- Mr. Minh Vu");
-        System.out.println("- Dr. Phong Ngo\n");
-        System.out.println("Group: DEADLINE HATERS\n");
-        System.out.println("Group Members: 4 members");
-        System.out.println("- Nguyen Ngoc Kim (s3970589)");
-        System.out.println("- Pham Tran Trung Hieu (s3836565)");
-        System.out.println("- Lee Jae Sung (s3977739)");
-        System.out.println("- Lam Uy Vu (s3938804)");
-        System.out.println("-----------------------------------------------------------");
+        System.out.println("||========================================================||");
+        System.out.println("||           WELCOME TO COSC2081 GROUP ASSIGNMENT         ||");
+        System.out.println("||            CONTAINER PORT MANAGEMENT SYSTEM            ||");
+        System.out.println("||========================================================||");
+        System.out.println("||========================================================||");
+        System.out.println("||Instructors:                                            ||");
+        System.out.println("||- Mr. Minh Vu                                           ||");
+        System.out.println("||- Dr. Phong Ngo                                         ||");
+        System.out.println("||========================================================||");
+        System.out.println("||========================================================||");
+        System.out.println("||                Group: DEADLINE HATERS                  ||");
+        System.out.println("||   Group Members: 4 members                             ||");
+        System.out.println("||     1. Nguyen Ngoc Kim (s3970589)                      ||");
+        System.out.println("||     2. Pham Tran Trung Hieu (s3836565)                 ||");
+        System.out.println("||     3. Lee Jae Sung (s3977739)                         ||");
+        System.out.println("||     4. Lam Uy Vu (s3938804)                            ||");
+        System.out.println("||========================================================||");
         while (true) {
-            System.out.println("\n1. Login as Admin");
-            System.out.println("2. Login as Port Manager");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("\n||============================||");
+            System.out.println("||--------WELCOME MENU--------||");
+            System.out.println("||     1. Login as Admin      ||");
+            System.out.println("||  2. Login as Port Manager  ||");
+            System.out.println("||          3. Exit           ||");
+            System.out.println("||============================||");
+            System.out.print("\nEnter your choice: ");
             int choice = scanner.nextInt();
 
             switch (choice) {
@@ -81,13 +91,14 @@ public class Main {
     private static void displayAdminMenu(Scanner scanner) {
         int choice;
         do {
-            System.out.println("Welcome to Admin Menu");
-            System.out.println("1. CRUD operations for Vehicles");
-            System.out.println("2. CRUD operations for Port");
-            System.out.println("3. CRUD operations for Container");
-            System.out.println("4. Moving Container Among the Ports");
-            // ... other admin-specific operations
-            System.out.println("0. Logout");
+            System.out.println("||==================================================||");
+            System.out.println("||---------------Welcome to Admin Menu--------------||");
+            System.out.println("||         1. CRUD operations for Vehicles          ||");
+            System.out.println("||           2. CRUD operations for Port            ||");
+            System.out.println("||        3. CRUD operations for Container          ||");
+            System.out.println("||       4. Moving Container Among the Ports        ||");
+            System.out.println("||                   0. Logout                      ||");
+            System.out.println("||==================================================||");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
@@ -117,12 +128,14 @@ public class Main {
     private static void vehicleCRUDMenu(Scanner scanner) {
         int choice;
         do {
-            System.out.println("Vehicle CRUD Operations");
-            System.out.println("1. Add a new vehicle");
-            System.out.println("2. Display all vehicles");
-            System.out.println("3. Update a vehicle");
-            System.out.println("4. Delete a vehicle");
-            System.out.println("0. Go back to main menu");
+            System.out.println("||========================================================||");
+            System.out.println("||-----------------Vehicle CRUD Operations----------------||");
+            System.out.println("||                  1. Add a new vehicle                  ||");
+            System.out.println("||                2. Display all vehicles                 ||");
+            System.out.println("||                  3. Update a vehicle                   ||");
+            System.out.println("||                  4. Delete a vehicle                   ||");
+            System.out.println("||               0. Go back to main menu                  ||");
+            System.out.println("||========================================================||");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -190,13 +203,15 @@ public class Main {
     private static void portCRUDMenu(Scanner scanner) {
         int choice;
         do {
-            System.out.println("Port CRUD Operations");
-            System.out.println("1. Add a new Port");
-            System.out.println("2. Display all Ports");
-            System.out.println("3. Update a Port");
-            System.out.println("4. Delete a Port");
-            System.out.println("5. Check Port Availability");
-            System.out.println("0. Go back to the main menu");
+            System.out.println("||=====================================================||");
+            System.out.println("||-----------------Port CRUD Operations----------------||");
+            System.out.println("||                  1. Add a new Port                  ||");
+            System.out.println("||                2. Display all Ports                 ||");
+            System.out.println("||                  3. Update a Port                   ||");
+            System.out.println("||                4. Delete a Port by ID               ||");
+            System.out.println("||              5. Check Port Availability             ||");
+            System.out.println("||              0. Go back to the main menu            ||");
+            System.out.println("||=====================================================||");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -246,14 +261,16 @@ public class Main {
     private static void containerCRUDMenu(Scanner scanner) {
         int choice;
         do {
-            System.out.println("Container CRUD Operations");
-            System.out.println("1. Add a new Container");
-            System.out.println("2. Display all Containers");
-            System.out.println("3. Update a container");
-            System.out.println("4. Delete a container");
-            System.out.println("5. Drop container");
-            System.out.println("0. Go back to the main menu");
-            System.out.println("Container CRUD Operations");
+            System.out.println("||====================================================||");
+            System.out.println("||---------------Container CRUD Operations------------||");
+            System.out.println("||               1. Add a new Container               ||");
+            System.out.println("||              2. Display all Containers             ||");
+            System.out.println("||               3. Update a container                ||");
+            System.out.println("||               4. Delete a container                ||");
+            System.out.println("||                5. Drop container                   ||");
+            System.out.println("||            0. Go back to the main menu             ||");
+            System.out.println("||====================================================||");
+            System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
 
