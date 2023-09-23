@@ -226,6 +226,12 @@ public class Main {
                     System.out.print("Enter the container ID: ");
                     String containerID = scanner.nextLine();
                     PortCRUD.checkPortAbility(portID, containerID);
+                    if (true) {
+                        System.out.println("The container: " + containerID + " can be loaded in port: " + portID);
+                    } else {
+                        System.out.println("The container: " + containerID + " cannot be loaded in port: " + portID);
+                    }
+                    break;
                 case 0:
                     System.out.println("Returning to main menu...");
                     break;

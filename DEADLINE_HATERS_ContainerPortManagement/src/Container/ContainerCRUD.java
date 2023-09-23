@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ContainerCRUD {
     private static List<Container> containers = new ArrayList<>();
-    private static String filePath = "src/Data/Container.txt";
+    private static String filePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Container.txt";
 
     public static void addContainer(String type,int weight, int storingCapacity) {
         String id = generateContainerId();
@@ -86,20 +86,20 @@ public class ContainerCRUD {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
     }
-    public static void checkContainerStorage(String vehicleID, String containerID, String portA, String portB) {
-        double containerWeight = readContainerWeight(containerID);
-
-        // Step 3: Read the "storingCapacity" of port B
-        double portBCapacity = PortCRUD.readPortCapacity(portB);
-
-        // Step 4: Compare container weight with port B's capacity
-        boolean result = containerWeight <= portBCapacity;
-
-        // Step 5: Return true or false
-        System.out.println("Container Weight: " + containerWeight + " tons");
-        System.out.println("Port B Capacity: " + portBCapacity + " tons");
-        System.out.println("Can the container be stored in Port B? " + result);
-    }
+//    public static void checkContainerStorage(String vehicleID, String containerID, String portA, String portB) {
+//        double containerWeight = readContainerWeight(containerID);
+//
+//        // Step 3: Read the "storingCapacity" of port B
+//        double portBCapacity = PortCRUD.readPortCapacity(portB);
+//
+//        // Step 4: Compare container weight with port B's capacity
+//        boolean result = containerWeight <= portBCapacity;
+//
+//        // Step 5: Return true or false
+//        System.out.println("Container Weight: " + containerWeight + " tons");
+//        System.out.println("Port B Capacity: " + portBCapacity + " tons");
+//        System.out.println("Can the container be stored in Port B? " + result);
+//    }
 
     // Method to read container weight from container.txt
     public static double readContainerWeight(String containerId) {
