@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ContainerCRUD {
     private static List<Container> containers = new ArrayList<>();
-
+    private static String filePath = "src/Data/Container.txt";
 
     public static void addContainer(String type,int weight, int storingCapacity) {
         String id = generateContainerId();
@@ -16,7 +16,6 @@ public class ContainerCRUD {
 
         Container container = new Container(id, type, (int) weight, storingCapacity);
         containers.add(container);
-        String filePath = "src/Data/Container.txt";
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
@@ -71,7 +70,6 @@ public class ContainerCRUD {
     }
 
     private static void rewriteContainerFile() {
-        String filePath = "src/Data/Container.txt";
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
@@ -105,7 +103,6 @@ public class ContainerCRUD {
 
     // Method to read container weight from container.txt
     public static double readContainerWeight(String containerId) {
-        String filePath = "src/Data/Container.txt";
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
