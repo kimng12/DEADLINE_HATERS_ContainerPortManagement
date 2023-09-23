@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FuelManagement {
-    private Map<String, FuelData> fuelDataMap; // VehicleID -> FuelData
-    private static String filePath = "src/Data/Container.txt";
 
+    private Map<String, Vehicle> vehicleData; // VehicleID -> Vehicle
+    private static String filePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
     public FuelManagement() {
-        this.fuelDataMap = new HashMap<>();
-        loadFuelDataFromFile();
+        this.vehicleData = new HashMap<>();
+        loadVehicleDataFromFile();
     }
 
-    // Load fuel data from the file into the map
-    private void loadFuelDataFromFile() {
+    // Load vehicle data from the file into the map
+    private void loadVehicleDataFromFile() {
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
@@ -25,14 +25,14 @@ public class FuelManagement {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 7) {
-                    String id = parts[0].trim();
+                    String vehicleID = parts[0].trim();
                     String vehicleType = parts[1].trim();
                     String containerType = parts[2].trim();
                     double currentFuel = Double.parseDouble(parts[3].trim());
                     double fuelCapacity = Double.parseDouble(parts[4].trim());
                     String containerID = parts[5].trim();
                     String portID = parts[6].trim();
-                    fuelDataMap.put(id, new FuelData(vehicleType, containerType, currentFuel, fuelCapacity, containerID, portID));
+                    vehicleData.put(vehicleID, new Vehicle(vehicleType, containerType, currentFuel, fuelCapacity, containerID, portID));
                 }
             }
         } catch (IOException e) {
@@ -40,19 +40,67 @@ public class FuelManagement {
         }
     }
 
-    private void saveFuelDataToFile() {
+    // Create: Refuel the vehicle by a specified amount of gallons
+    public boolean refuel(String vehicleID, double gallons) {
+        Vehicle vehicle = vehicleData.get(vehicleID);
+        if (vehicle != null && gallons > 0) {
+            double currentFuel = vehicle.getCurrentFuel();
+            double fuelCapacity = vehicle.getFuelCapacity();
+            double newFuel = Math.min(currentFuel + gallons, fuelCapacity);
+            vehicle.setCurrentFuel(newFuel);
+            saveVehicleDataToFile(); // Save the updated data
+            return true;
+        }
+        return false;
+    }
+
+    // Read: Get the current fuel level
+    public double getCurrentFuelLevel(String vehicleID) {
+        Vehicle vehicle = vehicleData.get(vehicleID);
+        if (vehicle != null) {
+            return vehicle.getCurrentFuel();
+        }
+        return 0.0; // Vehicle not found, return 0 as default
+    }
+
+    // Update: Deduct fuel consumption for a trip and update the current fuel level
+    public boolean updateFuelForTrip(String vehicleID, double fuelConsumed) {
+        Vehicle vehicle = vehicleData.get(vehicleID);
+        if (vehicle != null && fuelConsumed >= 0) {
+            double currentFuel = vehicle.getCurrentFuel();
+            double newFuel = Math.max(currentFuel - fuelConsumed, 0.0);
+            vehicle.setCurrentFuel(newFuel);
+            saveVehicleDataToFile(); // Save the updated data
+            return true;
+        }
+        return false;
+    }
+
+    // Delete: Set the current fuel level to zero (simulate emptying the fuel tank)
+    public boolean emptyFuelTank(String vehicleID) {
+        Vehicle vehicle = vehicleData.get(vehicleID);
+        if (vehicle != null) {
+            vehicle.setCurrentFuel(0.0);
+            saveVehicleDataToFile(); // Save the updated data
+            return true;
+        }
+        return false;
+    }
+
+    // Save vehicle data to the file
+    private void saveVehicleDataToFile() {
         File file = new File(filePath);
         File parentDirectory = file.getParentFile();
         if (!parentDirectory.exists()) {
             parentDirectory.mkdirs(); // Create parent directories if they don't exist
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for (Map.Entry<String, FuelData> entry : fuelDataMap.entrySet()) {
-                String id = entry.getKey();
-                FuelData fuelData = entry.getValue();
-                writer.write(id + "," + fuelData.getVehicleType() + "," + fuelData.getContainerType() + "," +
-                        fuelData.getCurrentFuel() + "," + fuelData.getFuelCapacity() + "," +
-                        fuelData.getContainerID() + "," + fuelData.getPortID());
+            for (Map.Entry<String, Vehicle> entry : vehicleData.entrySet()) {
+                String vehicleID = entry.getKey();
+                Vehicle vehicle = entry.getValue();
+                writer.write(vehicleID + "," + vehicle.getVehicleType() + "," + vehicle.getContainerType() + "," +
+                        vehicle.getCurrentFuel() + "," + vehicle.getFuelCapacity() + "," +
+                        vehicle.getContainerID() + "," + vehicle.getPortID());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -60,58 +108,22 @@ public class FuelManagement {
         }
     }
 
-    public void refuel(String id, double gallons) {
-        if (gallons > 0) {
-            FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
-            double currentFuel = fuelData.getCurrentFuel();
-            double fuelCapacity = fuelData.getFuelCapacity();
-            double newFuel = Math.min(currentFuel + gallons, fuelCapacity);
-            fuelData.setCurrentFuel(newFuel);
-            fuelDataMap.put(id, fuelData);
-            saveFuelDataToFile();
-            System.out.println("Refueled " + gallons + " gallons for vehicle ID: " + id);
-        } else {
-            System.out.println("Invalid fuel amount. Please provide a positive value.");
-        }
-    }
-
-    public double getCurrentFuelLevel(String id) {
-        FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
-        return fuelData.getCurrentFuel();
-    }
-
-    public void updateFuelForTrip(String id, double fuelConsumed) {
-        if (fuelConsumed >= 0) {
-            FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
-            double currentFuel = fuelData.getCurrentFuel();
-            double newFuel = Math.max(currentFuel - fuelConsumed, 0.0);
-            fuelData.setCurrentFuel(newFuel);
-            fuelDataMap.put(id, fuelData);
-            saveFuelDataToFile();
-        } else {
-            System.out.println("Invalid fuel consumption value.");
-        }
-    }
-
-    public void emptyFuelTank(String id) {
-        FuelData fuelData = fuelDataMap.getOrDefault(id, new FuelData("", "", 0.0, 0.0, "", ""));
-        fuelData.setCurrentFuel(0.0);
-        fuelDataMap.put(id, fuelData);
-        saveFuelDataToFile();
-    }
-
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         FuelManagement fuelManager = new FuelManagement();
 
-        fuelManager.refuel("v-001", 50.0);
+        // Example usage
+        boolean refuelSuccess = fuelManager.refuel("v-001", 50.0);
+        System.out.println("Refuel success: " + refuelSuccess);
         double currentFuelLevel = fuelManager.getCurrentFuelLevel("v-001");
         System.out.println("Current Fuel Level: " + currentFuelLevel);
-        fuelManager.updateFuelForTrip("v-001", 10.0);
-        fuelManager.emptyFuelTank("v-001");
-    }*/
+        boolean updateSuccess = fuelManager.updateFuelForTrip("v-001", 10.0);
+        System.out.println("Update success: " + updateSuccess);
+        boolean emptyTankSuccess = fuelManager.emptyFuelTank("v-001");
+        System.out.println("Empty Tank success: " + emptyTankSuccess);
+    }
 }
 
-class FuelData {
+class Vehicle {
     private String vehicleType;
     private String containerType;
     private double currentFuel;
@@ -119,7 +131,7 @@ class FuelData {
     private String containerID;
     private String portID;
 
-    public FuelData(String vehicleType, String containerType, double currentFuel, double fuelCapacity, String containerID, String portID) {
+    public Vehicle(String vehicleType, String containerType, double currentFuel, double fuelCapacity, String containerID, String portID) {
         this.vehicleType = vehicleType;
         this.containerType = containerType;
         this.currentFuel = currentFuel;
@@ -140,6 +152,10 @@ class FuelData {
         return currentFuel;
     }
 
+    public void setCurrentFuel(double currentFuel) {
+        this.currentFuel = currentFuel;
+    }
+
     public double getFuelCapacity() {
         return fuelCapacity;
     }
@@ -151,8 +167,5 @@ class FuelData {
     public String getPortID() {
         return portID;
     }
-
-    public void setCurrentFuel(double currentFuel) {
-        this.currentFuel = currentFuel;
-    }
 }
+
