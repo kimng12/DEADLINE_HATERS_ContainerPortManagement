@@ -7,22 +7,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class PortCRUD {
-    public  static  int getPortCount() {
+    public static int getPortCount() {
         int count = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
             while (reader.readLine() != null) {
                 count++;
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("An error occurred while writing to the file.");
             e.printStackTrace();
         }
         return count;
     }
 
+    // Creating Port
     public static void createPort(String portDetails) {
         int nextId = getPortCount() + 1;
         String portId = String.format("p-%03d", nextId);
@@ -34,6 +39,20 @@ public class PortCRUD {
             System.out.println("An error occurred while writing to the file.");
             e.printStackTrace();
         }
+    }
+
+    public static List<String> getAvailablePorts() {
+        List<String> availablePorts = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // For simplicity, we're assuming all ports are available. Adjust this logic if needed.
+                availablePorts.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading from file: " + e.getMessage());
+        }
+        return availablePorts;
     }
 
     public static List<String> readPorts() {
@@ -50,6 +69,7 @@ public class PortCRUD {
         return ports;
     }
 
+    // Update by ID
     public static void updatePort(String portID, String newPortDetails) {
         List<String> ports = readPorts();
         boolean portFound = false;
@@ -79,6 +99,7 @@ public class PortCRUD {
         }
     }
 
+    // Deleting port by ID
     public static void deletePort(String portIdToDelete, Scanner scanner) {
         List<String> ports = readPorts();
         boolean portFound = false;
@@ -139,6 +160,7 @@ public class PortCRUD {
         return 0.0; // Default if not found
     }
 
+    // Landing ability checking
     public static boolean checkLandingAbility(String portId) {
         try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
             String line;
@@ -158,6 +180,7 @@ public class PortCRUD {
         return false; // Default if not found or "no"
     }
 
+    // Moving Method
     public static void moveContainerFromPortAToPortB(String containerId, String portAID, String portBID) {
         // Read existing port data
         List<String> ports = readPorts();
@@ -205,13 +228,18 @@ public class PortCRUD {
         }
     }
 
+    // History saving method
+    public static void saveMovingDetails(String containerID, String portAID, String portBID, String vehicleID) {
+        try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Move_log.txt", true)) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String timestamp = dateFormat.format(new Date());
 
-    // Method to check the landing ability of a port
-//    public static boolean checkPortAbility(String portId) {
-//        // I want the system can check the information base on the ID inputted
-//        // Take the data of the port StoringCapacity and container weight
-//        // Then compare them
-//        double portStoringCapacity = readPortStoringCapacity(portId);
-//
-//    }
+            String logEntry = "Container: " + containerID + ", moved from " + portAID + " to " + portBID + " by Vehicle ID: " + vehicleID + " at " + timestamp;
+            writer.write(logEntry + "\n");
+            System.out.println("Moving details saved to log.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the moving details to the log file.");
+            e.printStackTrace();
+        }
+    }
 }

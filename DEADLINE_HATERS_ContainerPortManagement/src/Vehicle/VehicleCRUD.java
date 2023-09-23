@@ -3,6 +3,7 @@ package Vehicle;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class VehicleCRUD {
 
@@ -50,6 +51,24 @@ public class VehicleCRUD {
         }
         writeToFile(vehicles);
     }
+
+    public static List<String> getVehiclesWithContainers() {
+        List<String> vehiclesWithContainers = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(VEHICLE_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length > 7 && !parts[7].trim().isEmpty() && parts[7].startsWith("c-")) { // Check if there's a container ID
+                    vehiclesWithContainers.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading from file: " + e.getMessage());
+        }
+        return vehiclesWithContainers;
+    }
+
+
 
     public static void deleteVehicle(String vehicleId) {
         List<Vehicle> vehicles = readVehicles();
