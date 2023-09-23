@@ -17,10 +17,23 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Port Management System");
 
+
         // Sample data (Ideally, this would be loaded from a file or database)
         PortManager manager1 = new PortManager("manager1", "password");
         Admin admin = new Admin("admin", "adminPassword");
-
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("            WELCOME TO COSC2081 GROUP ASSIGNMENT");
+        System.out.println("       CONTAINER PORT MANAGEMENT SYSTEM\n");
+        System.out.println("Instructors:");
+        System.out.println("- Mr. Minh Vu");
+        System.out.println("- Dr. Phong Ngo\n");
+        System.out.println("Group: DEADLINE HATERS\n");
+        System.out.println("Group Members: 5 members");
+        System.out.println("- Nguyen Ngoc Kim (s3970589)");
+        System.out.println("- Nguyen Ngoc Kim (s3970589)");
+        System.out.println("- Nguyen Ngoc Kim (s3970589)");
+        System.out.println("- Nguyen Ngoc Kim (s3970589)");
+        System.out.println("-----------------------------------------------------------");
         while (true) {
             System.out.println("\n1. Login as Admin");
             System.out.println("2. Login as Port Manager");
@@ -223,15 +236,8 @@ public class Main {
                 case 5:
                     System.out.print("Enter the port ID: ");
                     String portID = scanner.nextLine();
-                    System.out.print("Enter the container ID: ");
-                    String containerID = scanner.nextLine();
-                    PortCRUD.checkPortAbility(portID, containerID);
-                    if (true) {
-                        System.out.println("The container: " + containerID + " can be loaded in port: " + portID);
-                    } else {
-                        System.out.println("The container: " + containerID + " cannot be loaded in port: " + portID);
-                    }
-                    break;
+                    boolean hasLandingAbility = PortCRUD.checkLandingAbility(portID);
+                    System.out.println("Landing Ability for " + portID + ": " + hasLandingAbility);
                 case 0:
                     System.out.println("Returning to main menu...");
                     break;
