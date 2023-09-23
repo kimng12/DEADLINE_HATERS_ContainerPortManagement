@@ -28,11 +28,11 @@ public class Main {
         System.out.println("- Mr. Minh Vu");
         System.out.println("- Dr. Phong Ngo\n");
         System.out.println("Group: DEADLINE HATERS\n");
-        System.out.println("Group Members: 5 members");
+        System.out.println("Group Members: 4 members");
         System.out.println("- Nguyen Ngoc Kim (s3970589)");
-        System.out.println("- Nguyen Ngoc Kim (s3970589)");
-        System.out.println("- Nguyen Ngoc Kim (s3970589)");
-        System.out.println("- Nguyen Ngoc Kim (s3970589)");
+        System.out.println("- Pham Tran Trung Hieu (s3836565)");
+        System.out.println("- Lee Jae Sung (s3977739)");
+        System.out.println("- Lam Uy Vu (s3938804)");
         System.out.println("-----------------------------------------------------------");
         while (true) {
             System.out.println("\n1. Login as Admin");
@@ -222,11 +222,12 @@ public class Main {
                     }
                     break;
                 case 3:
-                    System.out.print("Enter existing port details to update: ");
-                    String oldPortDetails = scanner.nextLine();
+                    System.out.print("Enter existing port ID to update: ");
+                    String portID = scanner.nextLine();
                     System.out.print("Enter new port details: ");
                     String newPortDetails = scanner.nextLine();
-                    PortCRUD.updatePort(oldPortDetails, newPortDetails);
+
+                    PortCRUD.updatePort(portID, newPortDetails);
                     break;
                 case 4:
                     System.out.print("Enter port details to delete: ");
@@ -235,9 +236,9 @@ public class Main {
                     break;
                 case 5:
                     System.out.print("Enter the port ID: ");
-                    String portID = scanner.nextLine();
-                    boolean hasLandingAbility = PortCRUD.checkLandingAbility(portID);
-                    System.out.println("Landing Ability for " + portID + ": " + hasLandingAbility);
+                    String portId = scanner.nextLine();
+                    boolean hasLandingAbility = PortCRUD.checkLandingAbility(portId);
+                    System.out.println("Landing Ability for " + portId + ": " + hasLandingAbility);
                 case 0:
                     System.out.println("Returning to main menu...");
                     break;

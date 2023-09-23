@@ -48,19 +48,32 @@ public class PortCRUD {
         return ports;
     }
 
-    public static void updatePort(String oldPortDetails, String newPortDetails) {
+    public static void updatePort(String portID, String newPortDetails) {
         List<String> ports = readPorts();
-        try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
-            for (String port : ports) {
-                if (port.equals(oldPortDetails)) {
-                    writer.write(newPortDetails + "\n");
-                } else {
-                    writer.write(port + "\n");
-                }
+        boolean portFound = false;
+
+        for (int i = 0; i < ports.size(); i++) {
+            String port = ports.get(i);
+            String[] parts = port.split(",");
+            if (parts.length >= 1 && parts[0].trim().equals(portID)) {
+                ports.set(i, portID + ", " + newPortDetails); // Update the port details
+                portFound = true;
+                break;
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred while updating the file.");
-            e.printStackTrace();
+        }
+
+        if (portFound) {
+            try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
+                for (String updatedPort : ports) {
+                    writer.write(updatedPort + "\n");
+                }
+                System.out.println("Port with ID " + portID + " updated successfully.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while updating the file.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Port with ID " + portID + " not found.");
         }
     }
 
