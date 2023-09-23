@@ -6,13 +6,7 @@ import User.Admin;
 import Port.*;
 import  Vehicle.*;
 import Container.*;
-
-import javax.sound.midi.Soundbank;
-
 public class Main {
-//    public static ArrayList<Port> ports = new ArrayList<>();
-//    public static ArrayList<Container> containers = new ArrayList<>();
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Port Management System");
@@ -109,6 +103,7 @@ public class Main {
                     break;
                 case 4:
                     displayMovePortForm();
+                    break;
                 case 0:
                     System.out.println("Logging out...");
                     break;
@@ -371,14 +366,9 @@ public class Main {
 
         // Method to move container
         PortCRUD.moveContainerFromPortAToPortB(containerId, portAID, portBID);
+
+        // Saving Method
+        PortCRUD.saveMovingDetails(containerId, portAID, portBID, vehicleId);
+        System.out.println("Moving History was saved!");
     }
 }
-
-
-
-
-
-
-// Write the addPort method here
-
-// Write the removePort method here
