@@ -19,7 +19,7 @@ public class FuelManagement {
             System.out.println("File not found: " + filePath);
             return;
         }
-        try (BufferedReader reader = new BufferedReader(new FileReader())) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");

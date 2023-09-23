@@ -1,11 +1,11 @@
-v-001,basic_truck,dry_storage,4000,3243,c-001,p-001
-v-002,basic_truck,dry_storage,4000,3243,c-002,p002
-v-003,basic_truck,open_top,4000,3243,c-001,p-001
-v-004,basic_truck,open_side,4000,3243,c-002,p-002
-v-005,reefer_trucks,refrigerated_container,5000,3243,c-001,p-001
-v-006,reefer_trucks,refrigerated_container,5000,3243,c-002,p-002
-v-007,reefer_trucks,refrigerated_container,5000,3243,c-001,p-001
-v-008,tanker_truck,liquid_container,6000,4000,c-002,p-001
-v-009,tanker_truck,liquid_container,6000,4000,c-001,p-001
-v-010,tanker_truck,liquid_container,6000,4000,c-0010,p-005
+v-001,basic_truck,dry_storage,4000,3243,p-001,c-001
+v-002,basic_truck,dry_storage,4000,3243,p-002,c-002
+v-003,basic_truck,open_top,4000,3243,p-001,c-001
+v-004,basic_truck,open_side,4000,3243,p-002,c-002
+v-005,reefer_trucks,refrigerated_container,5000,3243,p-001,c-001
+v-006,reefer_trucks,refrigerated_container,5000,3243,p-002,c-002
+v-007,reefer_trucks,refrigerated_container,5000,3243,p-001,c-001
+v-008,tanker_truck,liquid_container,6000,4000,p-002,c-001
+v-009,tanker_truck,liquid_container,6000,4000,p-001,c-001
+v-010,tanker_truck,liquid_container,6000,4000,p-0010,c-005
 
