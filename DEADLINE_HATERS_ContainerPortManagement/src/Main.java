@@ -10,17 +10,30 @@ import Container.*;
 import javax.sound.midi.Soundbank;
 
 public class Main {
-    public static ArrayList<Port> ports = new ArrayList<>();
-    public static ArrayList<Container> containers = new ArrayList<>();
+//    public static ArrayList<Port> ports = new ArrayList<>();
+//    public static ArrayList<Container> containers = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Port Management System");
 
+
         // Sample data (Ideally, this would be loaded from a file or database)
         PortManager manager1 = new PortManager("manager1", "password");
         Admin admin = new Admin("admin", "adminPassword");
-
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("            WELCOME TO COSC2081 GROUP ASSIGNMENT");
+        System.out.println("       CONTAINER PORT MANAGEMENT SYSTEM\n");
+        System.out.println("Instructors:");
+        System.out.println("- Mr. Minh Vu");
+        System.out.println("- Dr. Phong Ngo\n");
+        System.out.println("Group: DEADLINE HATERS\n");
+        System.out.println("Group Members: 4 members");
+        System.out.println("- Nguyen Ngoc Kim (s3970589)");
+        System.out.println("- Pham Tran Trung Hieu (s3836565)");
+        System.out.println("- Lee Jae Sung (s3977739)");
+        System.out.println("- Lam Uy Vu (s3938804)");
+        System.out.println("-----------------------------------------------------------");
         while (true) {
             System.out.println("\n1. Login as Admin");
             System.out.println("2. Login as Port Manager");
@@ -209,29 +222,22 @@ public class Main {
                     }
                     break;
                 case 3:
-                    System.out.print("Enter existing port details to update: ");
-                    String oldPortDetails = scanner.nextLine();
+                    System.out.print("Enter existing port ID to update: ");
+                    String portID = scanner.nextLine();
                     System.out.print("Enter new port details: ");
                     String newPortDetails = scanner.nextLine();
-                    PortCRUD.updatePort(oldPortDetails, newPortDetails);
+                    PortCRUD.updatePort(portID, newPortDetails);
                     break;
                 case 4:
-                    System.out.print("Enter port details to delete: ");
-                    String portToDelete = scanner.nextLine();
-                    PortCRUD.deletePort(portToDelete);
+                    System.out.print("Enter port ID to delete: ");
+                    String portIdToDelete = scanner.nextLine();
+                    PortCRUD.deletePort(portIdToDelete, scanner);
                     break;
                 case 5:
                     System.out.print("Enter the port ID: ");
-                    String portID = scanner.nextLine();
-                    System.out.print("Enter the container ID: ");
-                    String containerID = scanner.nextLine();
-                    PortCRUD.checkPortAbility(portID, containerID);
-                    if (true) {
-                        System.out.println("The container: " + containerID + " can be loaded in port: " + portID);
-                    } else {
-                        System.out.println("The container: " + containerID + " cannot be loaded in port: " + portID);
-                    }
-                    break;
+                    String portId = scanner.nextLine();
+                    boolean hasLandingAbility = PortCRUD.checkLandingAbility(portId);
+                    System.out.println("Landing Ability for " + portId + ": " + hasLandingAbility);
                 case 0:
                     System.out.println("Returning to main menu...");
                     break;
@@ -358,12 +364,13 @@ public class Main {
         String vehicleId = scanner.nextLine();
         System.out.print("Enter Container ID: ");
         String containerId = scanner.nextLine();
-        System.out.print("Enter Port A: ");
-        String portA = scanner.nextLine();
-        System.out.print("Enter Port B: ");
-        String portB = scanner.nextLine();
+        System.out.print("Enter Port A ID: ");
+        String portAID = scanner.nextLine();
+        System.out.print("Enter Port B ID: ");
+        String portBID = scanner.nextLine();
 
-        // Call the PortCRUD method to check if the container can be stored in Port B
+        // Method to move container
+        PortCRUD.moveContainerFromPortAToPortB(containerId, portAID, portBID);
     }
 }
 

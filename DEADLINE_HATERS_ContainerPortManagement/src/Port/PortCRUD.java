@@ -4,7 +4,9 @@ import Container.ContainerCRUD;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class PortCRUD {
@@ -62,32 +64,71 @@ public class PortCRUD {
         return ports;
     }
 
-    public static void updatePort(String oldPortDetails, String newPortDetails) {
+    public static void updatePort(String portID, String newPortDetails) {
         List<String> ports = readPorts();
-        try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
-            for (String port : ports) {
-                if (port.equals(oldPortDetails)) {
-                    writer.write(newPortDetails + "\n");
-                } else {
-                    writer.write(port + "\n");
-                }
+        boolean portFound = false;
+
+        for (int i = 0; i < ports.size(); i++) {
+            String port = ports.get(i);
+            String[] parts = port.split(",");
+            if (parts.length >= 1 && parts[0].trim().equals(portID)) {
+                ports.set(i, portID + ", " + newPortDetails); // Update the port details
+                portFound = true;
+                break;
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred while updating the file.");
-            e.printStackTrace();
+        }
+
+        if (portFound) {
+            try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
+                for (String updatedPort : ports) {
+                    writer.write(updatedPort + "\n");
+                }
+                System.out.println("Port with ID " + portID + " updated successfully.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while updating the file.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Port with ID " + portID + " not found.");
         }
     }
 
-    public static void deletePort(String portToDelete) {
+    public static void deletePort(String portIdToDelete, Scanner scanner) {
         List<String> ports = readPorts();
-        ports.remove(portToDelete);
-        try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
-            for (String port : ports) {
-                writer.write(port + "\n");
+        boolean portFound = false;
+
+        for (String port : ports) {
+            String[] parts = port.split(",");
+            if (parts.length >= 1 && parts[0].trim().equals(portIdToDelete)) {
+                portFound = true;
+                break;
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred while deleting from the file.");
-            e.printStackTrace();
+        }
+
+        if (!portFound) {
+            System.out.println("Port with ID " + portIdToDelete + " not found.");
+        } else {
+            System.out.print("Are you sure you want to delete the port with ID " + portIdToDelete + "? (Yes/No): ");
+            String confirmation = scanner.nextLine().trim().toLowerCase();
+
+            if (confirmation.equals("yes")) {
+                ports.removeIf(port -> {
+                    String[] parts = port.split(",");
+                    return parts.length >= 1 && parts[0].trim().equals(portIdToDelete);
+                });
+
+                try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
+                    for (String updatedPort : ports) {
+                        writer.write(updatedPort + "\n");
+                    }
+                    System.out.println("Port with ID " + portIdToDelete + " deleted successfully.");
+                } catch (IOException e) {
+                    System.out.println("An error occurred while deleting from the file.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Deletion canceled.");
+            }
         }
     }
 
@@ -112,17 +153,79 @@ public class PortCRUD {
         return 0.0; // Default if not found
     }
 
-    // Method to check the landing ability of a port
-    public static boolean checkPortAbility(String portId, String containerID) {
-        // I want the system can check the information base on the ID inputted
-        // Take the data of the port StoringCapacity and container weight
-        // Then compare them
-        double portStoringCapacity = readPortStoringCapacity(portId);
-        double containerWeight = ContainerCRUD.readContainerWeight(containerID);
-        if (portStoringCapacity >= containerWeight) {
-            return true;
+    public static boolean checkLandingAbility(String portId) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 1 && parts[0].trim().equals(portId)) {
+                    // Assuming that landingAbility is in the 6th column (index 5)
+                    if (parts.length >= 6) {
+                        String landingAbilityStr = parts[5].trim().toLowerCase();
+                        return landingAbilityStr.equals("yes");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false; // Default if not found or "no"
+    }
+
+    public static void moveContainerFromPortAToPortB(String containerId, String portAID, String portBID) {
+        // Read existing port data
+        List<String> ports = readPorts();
+        boolean portAFound = false;
+        boolean portBFound = false;
+
+        for (int i = 0; i < ports.size(); i++) {
+            String portData = ports.get(i);
+            String[] parts = portData.split(",");
+            if (parts.length >= 1) {
+                String currentPortId = parts[0].trim();
+                if (currentPortId.equals(portAID)) {
+                    // Remove containerId from port A
+                    List<String> portDetails = new ArrayList<>(Arrays.asList(parts));
+                    if (portDetails.remove(containerId)) {
+                        portAFound = true;
+                        // Update port A details
+                        ports.set(i, String.join(",", portDetails));
+                    }
+                } else if (currentPortId.equals(portBID)) {
+                    // Add containerId to port B
+                    List<String> portDetails = new ArrayList<>(Arrays.asList(parts));
+                    if (!portDetails.contains(containerId)) {
+                        portDetails.add(containerId);
+                        portBFound = true;
+                        // Update port B details
+                        ports.set(i, String.join(",", portDetails));
+                    }
+                }
+            }
+        }
+
+        if (portAFound && portBFound) {
+            try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
+                for (String updatedPort : ports) {
+                    writer.write(updatedPort + "\n");
+                }
+                System.out.println("Container with ID " + containerId + " moved from Port A to Port B.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while updating the file.");
+                e.printStackTrace();
+            }
         } else {
-            return false;
+            System.out.println("Either Port A or Port B was not found, or the container was not found in Port A.");
         }
     }
+
+
+    // Method to check the landing ability of a port
+//    public static boolean checkPortAbility(String portId) {
+//        // I want the system can check the information base on the ID inputted
+//        // Take the data of the port StoringCapacity and container weight
+//        // Then compare them
+//        double portStoringCapacity = readPortStoringCapacity(portId);
+//
+//    }
 }
