@@ -98,17 +98,32 @@ public class PortCRUD {
         return 0.0; // Default if not found
     }
 
-    // Method to check the landing ability of a port
-    public static boolean checkPortAbility(String portId, String containerID) {
-        // I want the system can check the information base on the ID inputted
-        // Take the data of the port StoringCapacity and container weight
-        // Then compare them
-        double portStoringCapacity = readPortStoringCapacity(portId);
-        double containerWeight = ContainerCRUD.readContainerWeight(containerID);
-        if (portStoringCapacity >= containerWeight) {
-            return true;
-        } else {
-            return false;
+    public static boolean checkLandingAbility(String portId) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 1 && parts[0].trim().equals(portId)) {
+                    // Assuming that landingAbility is in the 6th column (index 5)
+                    if (parts.length >= 6) {
+                        String landingAbilityStr = parts[5].trim().toLowerCase();
+                        return landingAbilityStr.equals("yes");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return false; // Default if not found or "no"
     }
+
+
+    // Method to check the landing ability of a port
+//    public static boolean checkPortAbility(String portId) {
+//        // I want the system can check the information base on the ID inputted
+//        // Take the data of the port StoringCapacity and container weight
+//        // Then compare them
+//        double portStoringCapacity = readPortStoringCapacity(portId);
+//
+//    }
 }
