@@ -10,8 +10,8 @@ import Container.*;
 import javax.sound.midi.Soundbank;
 
 public class Main {
-    public static ArrayList<Port> ports = new ArrayList<>();
-    public static ArrayList<Container> containers = new ArrayList<>();
+//    public static ArrayList<Port> ports = new ArrayList<>();
+//    public static ArrayList<Container> containers = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -226,7 +226,6 @@ public class Main {
                     String portID = scanner.nextLine();
                     System.out.print("Enter new port details: ");
                     String newPortDetails = scanner.nextLine();
-
                     PortCRUD.updatePort(portID, newPortDetails);
                     break;
                 case 4:
@@ -327,12 +326,13 @@ public class Main {
         String vehicleId = scanner.nextLine();
         System.out.print("Enter Container ID: ");
         String containerId = scanner.nextLine();
-        System.out.print("Enter Port A: ");
-        String portA = scanner.nextLine();
-        System.out.print("Enter Port B: ");
-        String portB = scanner.nextLine();
+        System.out.print("Enter Port A ID: ");
+        String portAID = scanner.nextLine();
+        System.out.print("Enter Port B ID: ");
+        String portBID = scanner.nextLine();
 
-        // Call the PortCRUD method to check if the container can be stored in Port B
+        // Method to move container
+        PortCRUD.moveContainerFromPortAToPortB(containerId, portAID, portBID);
     }
 }
 

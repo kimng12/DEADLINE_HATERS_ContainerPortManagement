@@ -4,6 +4,7 @@ import Container.ContainerCRUD;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -155,6 +156,53 @@ public class PortCRUD {
             e.printStackTrace();
         }
         return false; // Default if not found or "no"
+    }
+
+    public static void moveContainerFromPortAToPortB(String containerId, String portAID, String portBID) {
+        // Read existing port data
+        List<String> ports = readPorts();
+        boolean portAFound = false;
+        boolean portBFound = false;
+
+        for (int i = 0; i < ports.size(); i++) {
+            String portData = ports.get(i);
+            String[] parts = portData.split(",");
+            if (parts.length >= 1) {
+                String currentPortId = parts[0].trim();
+                if (currentPortId.equals(portAID)) {
+                    // Remove containerId from port A
+                    List<String> portDetails = new ArrayList<>(Arrays.asList(parts));
+                    if (portDetails.remove(containerId)) {
+                        portAFound = true;
+                        // Update port A details
+                        ports.set(i, String.join(",", portDetails));
+                    }
+                } else if (currentPortId.equals(portBID)) {
+                    // Add containerId to port B
+                    List<String> portDetails = new ArrayList<>(Arrays.asList(parts));
+                    if (!portDetails.contains(containerId)) {
+                        portDetails.add(containerId);
+                        portBFound = true;
+                        // Update port B details
+                        ports.set(i, String.join(",", portDetails));
+                    }
+                }
+            }
+        }
+
+        if (portAFound && portBFound) {
+            try (FileWriter writer = new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt")) {
+                for (String updatedPort : ports) {
+                    writer.write(updatedPort + "\n");
+                }
+                System.out.println("Container with ID " + containerId + " moved from Port A to Port B.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while updating the file.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Either Port A or Port B was not found, or the container was not found in Port A.");
+        }
     }
 
 
