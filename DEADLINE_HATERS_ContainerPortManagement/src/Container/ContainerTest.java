@@ -33,4 +33,29 @@ public class ContainerTest {
         }
         Files.write(Paths.get("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"), updatedVehicleLines);
     }
+    public static void transferContainerFromVehicleToPort(String containerId, String vehicleId, String portId) throws IOException {
+        // Read the Vehicle.txt file and remove the container from the specified vehicle
+        List<String> vehicleLines = Files.readAllLines(Paths.get("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"));
+        List<String> updatedVehicleLines = new ArrayList<>();
+
+        for (String line : vehicleLines) {
+            if (line.contains(containerId)) {
+                line = line.replace("," + containerId, ""); // Remove the container ID from the line
+            }
+            updatedVehicleLines.add(line);
+        }
+        Files.write(Paths.get("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"), updatedVehicleLines);
+
+        // Read the port.txt file and add the container to the specified port
+        List<String> portLines = Files.readAllLines(Paths.get("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"));
+        List<String> updatedPortLines = new ArrayList<>();
+
+        for (String line : portLines) {
+            if (line.startsWith(portId + ",")) {
+                line = line + "," + containerId; // Add the container ID to the port line
+            }
+            updatedPortLines.add(line);
+        }
+        Files.write(Paths.get("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"), updatedPortLines);
+    }
 }
