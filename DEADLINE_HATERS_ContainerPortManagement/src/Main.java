@@ -344,6 +344,11 @@
                         //ContainerCRUD.removeContainer(idToDelete);
                         break;
                     case 5:
+                        // Declare the variables
+                        String containerId;
+                        String vehicleId;
+                        String portId;
+
                         System.out.print("Enter Container ID (e.g., c-005): ");
                         containerId = scanner.nextLine();
 
