@@ -344,41 +344,20 @@
                         //ContainerCRUD.removeContainer(idToDelete);
                         break;
                     case 5:
-                        // Display all vehicles with containers
-                        List<String> vehiclesWithContainers = VehicleCRUD.getVehiclesWithContainers();
-                        if (vehiclesWithContainers.isEmpty()) {
-                            System.out.println("No vehicles with containers found!");
-                            break;
-                        }
-                        System.out.println("Vehicles with containers:");
-                        for (int i = 0; i < vehiclesWithContainers.size(); i++) {
-                            System.out.println((i + 1) + ". " + vehiclesWithContainers.get(i));
-                        }
-                        System.out.print("Choose a vehicle to drop its container (Enter the number): ");
-                        int vehicleChoice = scanner.nextInt();
-                        scanner.nextLine(); // Consume newline
-                        String chosenContainerId = vehiclesWithContainers.get(vehicleChoice - 1).split(",")[6]; // Assuming the container ID is the seventh element in the comma-separated string
+                        System.out.print("Enter Container ID (e.g., c-005): ");
+                        containerId = scanner.nextLine();
 
-                        // Display available ports
-                        List<String> availablePorts = PortCRUD.getAvailablePorts();
-                        if (availablePorts.isEmpty()) {
-                            System.out.println("No available ports found!");
-                            break;
-                        }
-                        System.out.println("Available ports:");
-                        for (int i = 0; i < availablePorts.size(); i++) {
-                            System.out.println((i + 1) + ". " + availablePorts.get(i));
-                        }
-                        System.out.print("Choose a port to drop the container into (Enter the number): ");
-                        int portChoice = scanner.nextInt();
-                        scanner.nextLine(); // Consume newline
-                        String chosenVehicleId = vehiclesWithContainers.get(vehicleChoice - 1).split(",")[0]; // Assuming the vehicle ID is the first element in the comma-separated string
+                        System.out.print("Enter Vehicle ID from which to remove the container (e.g., v-001): ");
+                        vehicleId = scanner.nextLine();
 
+                        System.out.print("Enter Port ID to which to add the container (e.g., p-005): ");
+                        portId = scanner.nextLine();
 
-                        // Call the transferContainerToPort function
-                        String chosenPortId = availablePorts.get(portChoice - 1);
-                        //ContainerCRUD.transferContainerToPort(chosenVehicleId, chosenPortId);
-                        System.out.println("Container dropped successfully!");
+                        try {
+                            ContainerTest.transferContainerFromVehicleToPort(containerId, vehicleId, portId);
+                        } catch (IOException e) {
+                            System.out.println("An error occurred: " + e.getMessage());
+                        }
                         break;
                     case 6:
                         // Load a container into a vehicle
