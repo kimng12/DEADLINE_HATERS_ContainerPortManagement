@@ -289,6 +289,7 @@
                 System.out.println("||               3. Update a container                ||");
                 System.out.println("||               4. Delete a container                ||");
                 System.out.println("||                5. Drop container                   ||");
+                System.out.println("||                6. Load container                   ||");
                 System.out.println("||            0. Go back to the main menu             ||");
                 System.out.println("||====================================================||");
                 System.out.print("Enter your choice: ");
@@ -378,6 +379,14 @@
                         String chosenPortId = availablePorts.get(portChoice - 1);
                         //ContainerCRUD.transferContainerToPort(chosenVehicleId, chosenPortId);
                         System.out.println("Container dropped successfully!");
+                        break;
+                    case 6:
+                        // Load a container into a vehicle
+                        System.out.println("Load a container into a vehicle:");
+
+                        // Call the loadContainerIntoVehicle function
+                        ContainerCRUD.loadContainerIntoVehicle();
+
                         break;
                     case 0:
                         System.out.println("Returning to the main menu...");
