@@ -96,17 +96,17 @@
         private static void displayAdminMenu(Scanner scanner) throws IOException {
             int choice;
             do {
-                System.out.println("||==============================================================||");
-                System.out.println("||---------------Welcome to Admin Menu--------------------------||");
-                System.out.println("||         1. CRUD operations for Vehicles                      ||");
-                System.out.println("||           2. CRUD operations for Port                        ||");
-                System.out.println("||        3. CRUD operations for Container                      ||");
-                System.out.println("||       4. Moving Container Among the Ports                    ||");
-                System.out.println("||       5.         Check Weights Limit Before transport           ||");
-                System.out.println("||       6. Move Weights of Container from vehicle to Port      ||");
-                System.out.println("||       7. Move Weights of Port from vehicle to Container      ||");
-                System.out.println("||                   0. Logout                                  ||");
-                System.out.println("||==============================================================||");
+                System.out.println("||===============================================================||");
+                System.out.println("||--------------------Welcome to Admin Menu----------------------||");
+                System.out.println("||               1. CRUD operations for Vehicles                 ||");
+                System.out.println("||                2. CRUD operations for Port                    ||");
+                System.out.println("||               3. CRUD operations for Container                ||");
+                System.out.println("||              4. Moving Container Among the Ports              ||");
+                System.out.println("||            5. Check Weights Limit Before transport            ||");
+                System.out.println("||         6. Move Weights of Container from vehicle to Port     ||");
+                System.out.println("||       7. Move Weights of Port from vehicle to Container       ||");
+                System.out.println("||                           0. Logout                           ||");
+                System.out.println("||===============================================================||");
                 System.out.print("Enter your choice: ");
                 choice = scanner.nextInt();
 
