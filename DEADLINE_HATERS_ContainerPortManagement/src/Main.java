@@ -127,7 +127,7 @@
                     case 6:  // <-- New case
                         transferWeight(scanner);
                         break;
-                    case 5:  // <-- New case for checking weight limits
+                    case 5:  // <-- weight check if on limit
                         try {
                             Weights.runWeightCheck();
                         } catch (IOException e) {
