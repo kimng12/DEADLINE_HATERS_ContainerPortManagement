@@ -1,6 +1,8 @@
     import java.util.ArrayList;
     import java.util.List;
     import java.util.Scanner;
+
+    import Fuel.FuelManagement;
     import User.PortManager;
     import User.Admin;
     import Port.*;
@@ -153,6 +155,7 @@
                 System.out.println("||                2. Display all vehicles                 ||");
                 System.out.println("||                  3. Update a vehicle                   ||");
                 System.out.println("||                  4. Delete a vehicle                   ||");
+                System.out.println("||                  5.Fuel Management                     ||");
                 System.out.println("||               0. Go back to main menu                  ||");
                 System.out.println("||========================================================||");
                 System.out.print("Enter your choice: ");
@@ -208,6 +211,8 @@
                         VehicleCRUD.deleteVehicle(vehicleIdToDelete);
                         System.out.println("Vehicle with ID " + vehicleIdToDelete + " deleted.");
                         break;
+                    case 5:
+                        fuelManagementMenu();
                     case 0:
                         System.out.println("Returning to main menu...");
                         break;
@@ -215,6 +220,73 @@
                         System.out.println("Invalid choice! Please try again.");
                 }
             } while (choice != 0);
+        }
+
+        private static void fuelManagementMenu() {
+            FuelManagement fuelManager = new FuelManagement();
+            Scanner scanner = new Scanner(System.in);
+
+            while (true) {
+                System.out.println("Choose an action:");
+                System.out.println("1. Refuel");
+                System.out.println("2. Get Current Fuel Level");
+                System.out.println("3. Fill Up Fuel for Trip");
+                System.out.println("4. Calculate Distance and Deduct Fuel");
+                System.out.println("5. Delete Vehicle Data");
+                System.out.println("6. Exit");
+                System.out.print("Enter your choice: ");
+
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline character
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter vehicle ID: ");
+                        String refuelId = scanner.nextLine();
+                        System.out.print("Enter gallons to refuel: ");
+                        double refuelGallons = scanner.nextDouble();
+                        fuelManager.refuel(refuelId, refuelGallons);
+                        break;
+
+                    case 2:
+                        System.out.print("Enter vehicle ID: ");
+                        String currentFuelId = scanner.nextLine();
+                        double currentFuelLevel = fuelManager.getCurrentFuelLevel(currentFuelId);
+                        System.out.println("Current Fuel Level: " + currentFuelLevel);
+                        break;
+
+                    case 3:
+                        System.out.print("Enter vehicle ID: ");
+                        String fillUpId = scanner.nextLine();
+                        System.out.print("Enter fuel consumed for trip: ");
+                        double fuelConsumed = scanner.nextDouble();
+                        fuelManager.fillUpFuelForTrip(fillUpId, fuelConsumed);
+                        break;
+
+                    case 4:
+                        System.out.print("Enter vehicle ID: ");
+                        String distanceId = scanner.nextLine();
+                        System.out.print("Enter distance traveled (miles): ");
+                        double distance = scanner.nextDouble();
+                        fuelManager.calculateDistanceAndDeductFuel(distanceId, distance);
+                        break;
+
+                    case 5:
+                        System.out.print("Enter vehicle ID to delete: ");
+                        String deleteId = scanner.nextLine();
+                        fuelManager.deleteVehicleData(deleteId);
+                        break;
+
+                    case 6:
+                        scanner.close();
+                        System.exit(0);
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice. Please choose a valid option.");
+                        break;
+                }
+            }
         }
 
 
@@ -344,20 +416,41 @@
                         //ContainerCRUD.removeContainer(idToDelete);
                         break;
                     case 5:
-                        System.out.print("Enter Container ID (e.g., c-005): ");
-                        containerId = scanner.nextLine();
-
-                        System.out.print("Enter Vehicle ID from which to remove the container (e.g., v-001): ");
-                        vehicleId = scanner.nextLine();
-
-                        System.out.print("Enter Port ID to which to add the container (e.g., p-005): ");
-                        portId = scanner.nextLine();
-
-                        try {
-                            ContainerTest.transferContainerFromVehicleToPort(containerId, vehicleId, portId);
-                        } catch (IOException e) {
-                            System.out.println("An error occurred: " + e.getMessage());
+                        // Display all vehicles with containers
+                        List<String> vehiclesWithContainers = VehicleCRUD.getVehiclesWithContainers();
+                        if (vehiclesWithContainers.isEmpty()) {
+                            System.out.println("No vehicles with containers found!");
+                            break;
                         }
+                        System.out.println("Vehicles with containers:");
+                        for (int i = 0; i < vehiclesWithContainers.size(); i++) {
+                            System.out.println((i + 1) + ". " + vehiclesWithContainers.get(i));
+                        }
+                        System.out.print("Choose a vehicle to drop its container (Enter the number): ");
+                        int vehicleChoice = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        String chosenContainerId = vehiclesWithContainers.get(vehicleChoice - 1).split(",")[6]; // Assuming the container ID is the seventh element in the comma-separated string
+
+                        // Display available ports
+                        List<String> availablePorts = PortCRUD.getAvailablePorts();
+                        if (availablePorts.isEmpty()) {
+                            System.out.println("No available ports found!");
+                            break;
+                        }
+                        System.out.println("Available ports:");
+                        for (int i = 0; i < availablePorts.size(); i++) {
+                            System.out.println((i + 1) + ". " + availablePorts.get(i));
+                        }
+                        System.out.print("Choose a port to drop the container into (Enter the number): ");
+                        int portChoice = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        String chosenVehicleId = vehiclesWithContainers.get(vehicleChoice - 1).split(",")[0]; // Assuming the vehicle ID is the first element in the comma-separated string
+
+
+                        // Call the transferContainerToPort function
+                        String chosenPortId = availablePorts.get(portChoice - 1);
+                        //ContainerCRUD.transferContainerToPort(chosenVehicleId, chosenPortId);
+                        System.out.println("Container dropped successfully!");
                         break;
                     case 6:
                         // Load a container into a vehicle

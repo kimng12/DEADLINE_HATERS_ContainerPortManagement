@@ -151,7 +151,7 @@ public class FuelManagement {
         return 10.0; // Miles per gallon (adjust as needed)
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         FuelManagement fuelManager = new FuelManagement();
         Scanner scanner = new Scanner(System.in);
 
@@ -216,7 +216,7 @@ public class FuelManagement {
                     break;
             }
         }
-    }
+    }*/
 }
 
 class FuelData {
