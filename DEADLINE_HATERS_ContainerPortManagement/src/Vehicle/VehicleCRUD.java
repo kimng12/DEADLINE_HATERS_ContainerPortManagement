@@ -53,20 +53,25 @@ public class VehicleCRUD {
     }
 
     public static List<String> getVehiclesWithContainers() {
+        String vehicleFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
         List<String> vehiclesWithContainers = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(VEHICLE_FILE))) {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(vehicleFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length > 7 && !parts[7].trim().isEmpty() && parts[7].startsWith("c-")) { // Check if there's a container ID
+                // Check if the vehicle has a container ID that isn't "no" or empty
+                if (parts.length > 6 && !parts[6].equals("no") && !parts[6].isEmpty()) {
                     vehiclesWithContainers.add(line);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading from file: " + e.getMessage());
+            e.printStackTrace();
         }
+
         return vehiclesWithContainers;
     }
+
 
 
 

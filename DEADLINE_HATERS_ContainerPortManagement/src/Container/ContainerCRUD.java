@@ -5,6 +5,11 @@ import Port.PortCRUD;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
+
+
 
 public class ContainerCRUD {
     private static List<Container> containers = new ArrayList<>();
@@ -72,28 +77,27 @@ public class ContainerCRUD {
         String vehicleFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
         String portFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt";
 
-        List<String> allVehicles = new ArrayList<>();
         String chosenContainerId = null;
 
-        // Read the entire Vehicle.txt file
-        try (BufferedReader reader = new BufferedReader(new FileReader(vehicleFilePath))) {
+        // Step 1: Extract the container ID from the chosen vehicle and update the vehicle record.
+        List<String> updatedVehicleLines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts[0].equals(chosenVehicleId)) {
-                    chosenContainerId = parts[7]; // Extract container ID
-                    // Remove the container ID from the vehicle's record
-                    line = String.join(",", parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);
+                    chosenContainerId = parts[6];
+                    line = line.replace("," + chosenContainerId, ",no");
                 }
-                allVehicles.add(line);
+                updatedVehicleLines.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Write all vehicles back to Vehicle.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(vehicleFilePath))) {
-            for (String line : allVehicles) {
+        // Write the updated vehicle data back to Vehicle.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt"))) {
+            for (String line : updatedVehicleLines) {
                 writer.write(line);
                 writer.newLine();
             }
@@ -101,31 +105,13 @@ public class ContainerCRUD {
             e.printStackTrace();
         }
 
-// Add the container ID to the chosen port in Port.txt
+        // Step 2: Add the container ID to the chosen port.
         List<String> updatedPortLines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(portFilePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith(chosenPortId + ",")) {
-                    String[] parts = line.split(",");
-                    // Check if the port already has containers
-                    if ("no".equals(parts[6])) {
-                        parts[6] = chosenContainerId; // Replace "no" with the container ID
-                    } else {
-                        // Find the next available spot for the container ID
-                        int index = 7;
-                        while (index < parts.length && !"no".equals(parts[index])) {
-                            index++;
-                        }
-                        if (index < parts.length) {
-                            parts[index] = chosenContainerId; // Add the container ID in the next available spot
-                        } else {
-                            // If there's no available spot, append the container ID to the end
-                            line += "," + chosenContainerId;
-                            continue;
-                        }
-                        line = String.join(",", parts);
-                    }
+                    line += "," + chosenContainerId;
                 }
                 updatedPortLines.add(line);
             }
@@ -133,11 +119,8 @@ public class ContainerCRUD {
             e.printStackTrace();
         }
 
-
-
-
-// Write the updated lines back to Port.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(portFilePath))) {
+        // Write the updated port data back to Port.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt"))) {
             for (String line : updatedPortLines) {
                 writer.write(line);
                 writer.newLine();
@@ -145,8 +128,12 @@ public class ContainerCRUD {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-}
+
+
+
+
 
 
     private static void rewriteContainerFile() {
@@ -166,6 +153,178 @@ public class ContainerCRUD {
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
     }
+
+    public static void loadContainerIntoVehicle() {
+        String vehicleFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Vehicle.txt";
+        String portFilePath = "DEADLINE_HATERS_ContainerPortManagement/src/Data/Port.txt";
+
+        // Create a mapping of port IDs to containers in each port
+        Map<String, List<String>> portContainersMap = new HashMap<>();
+        try (BufferedReader portReader = new BufferedReader(new FileReader(portFilePath))) {
+            String line;
+            while ((line = portReader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2 && parts[5].trim().equals("yes")) {
+                    String portId = parts[0].trim();
+                    String containerId = parts[6].trim();
+                    portContainersMap.computeIfAbsent(portId, k -> new ArrayList<>()).add(containerId);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Display available containers in each port
+        if (portContainersMap.isEmpty()) {
+            System.out.println("No available containers found in Port.txt!");
+            return;
+        }
+
+        System.out.println("Available containers in each port:");
+        int portIndex = 1;
+        for (Map.Entry<String, List<String>> entry : portContainersMap.entrySet()) {
+            String portId = entry.getKey();
+            List<String> containerIds = entry.getValue();
+            System.out.println(portIndex + ". Port " + portId + ":");
+            int containerIndex = 1;
+            for (String containerId : containerIds) {
+                System.out.println("  " + containerIndex + ". " + containerId);
+                containerIndex++;
+            }
+            portIndex++;
+        }
+
+        // Prompt the user to choose a container and a vehicle
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of the port to choose a container from: ");
+        int portChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        // Validate the port choice
+        if (portChoice < 1 || portChoice > portContainersMap.size()) {
+            System.out.println("Invalid port choice.");
+            return;
+        }
+
+        // Get the selected port
+        String selectedPortId = null;
+        int selectedPortIndex = 1;
+        for (Map.Entry<String, List<String>> entry : portContainersMap.entrySet()) {
+            if (selectedPortIndex == portChoice) {
+                selectedPortId = entry.getKey();
+                break;
+            }
+            selectedPortIndex++;
+        }
+
+        // Get the container IDs in the selected port
+        List<String> containerIdsInSelectedPort = portContainersMap.get(selectedPortId);
+
+        // Display vehicles with no containers
+        List<String> allVehicles = new ArrayList<>();
+        try (BufferedReader vehicleReader = new BufferedReader(new FileReader(vehicleFilePath))) {
+            String line;
+            while ((line = vehicleReader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 7 && parts[6].trim().equals("no")) {
+                    allVehicles.add(line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Display vehicles with no containers
+        if (allVehicles.isEmpty()) {
+            System.out.println("No vehicles without containers found!");
+            return;
+        }
+
+        System.out.println("Vehicles without containers:");
+        for (int i = 0; i < allVehicles.size(); i++) {
+            System.out.println((i + 1) + ". " + allVehicles.get(i));
+        }
+
+        // Prompt the user to select a vehicle
+        System.out.print("Choose a vehicle to load the container into (Enter the number): ");
+        int vehicleChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        // Validate the vehicle choice
+        if (vehicleChoice < 1 || vehicleChoice > allVehicles.size()) {
+            System.out.println("Invalid vehicle choice.");
+            return;
+        }
+
+        // Get the selected vehicle
+        String selectedVehicleLine = allVehicles.get(vehicleChoice - 1);
+        String[] vehicleParts = selectedVehicleLine.split(",");
+
+        // Check if there are containers in the selected port
+        if (!containerIdsInSelectedPort.isEmpty()) {
+            // Prompt the user to select a container from the selected port
+            System.out.print("Enter the number of the container to load: ");
+            int containerChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            // Validate the container choice
+            if (containerChoice < 1 || containerChoice > containerIdsInSelectedPort.size()) {
+                System.out.println("Invalid container choice.");
+                return;
+            }
+
+            String chosenContainerId = containerIdsInSelectedPort.get(containerChoice - 1);
+
+            // Update the vehicle with the chosen container
+            vehicleParts[6] = chosenContainerId; // Replace "no" with the chosen container ID
+            selectedVehicleLine = String.join(",", vehicleParts);
+            allVehicles.set(vehicleChoice - 1, selectedVehicleLine);
+
+            // Write all vehicles back to Vehicle.txt
+            try (BufferedWriter vehicleWriter = new BufferedWriter(new FileWriter(vehicleFilePath))) {
+                for (String line : allVehicles) {
+                    vehicleWriter.write(line);
+                    vehicleWriter.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Remove the chosen container from the selected port
+            containerIdsInSelectedPort.remove(chosenContainerId);
+
+            // Update Port.txt with the modified container list for the selected port
+            try (BufferedReader portReader = new BufferedReader(new FileReader(portFilePath))) {
+                List<String> updatedPortLines = new ArrayList<>();
+                String line;
+                while ((line = portReader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 2 && parts[0].trim().equals(selectedPortId)) {
+                        // Update the line with the modified container list
+                        parts[6] = String.join(",", containerIdsInSelectedPort);
+                        line = String.join(",", parts);
+                    }
+                    updatedPortLines.add(line);
+                }
+                // Write the updated port data back to Port.txt
+                try (BufferedWriter portWriter = new BufferedWriter(new FileWriter(portFilePath))) {
+                    for (String updatedLine : updatedPortLines) {
+                        portWriter.write(updatedLine);
+                        portWriter.newLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("Container loaded into the vehicle successfully and updated in Port.txt!");
+        } else {
+            System.out.println("No containers available in the selected port.");
+        }
+    }
+
 //    public static void checkContainerStorage(String vehicleID, String containerID, String portA, String portB) {
 //        double containerWeight = readContainerWeight(containerID);
 //
